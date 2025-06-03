@@ -85,8 +85,10 @@
 ### 🎛️ 技术特性
 
 - **模型选择**：
-  - `gemini-1.5-flash`：速度优先，适合批量处理
-  - `gemini-1.5-pro`：精度优先，适合重要文档
+  - `gemini-2.5-flash-preview-05-20`：最新预览版，性价比最高（推荐）
+  - `gemini-2.5-pro-preview-05-06`：最强思考型模型，精度最高
+  - `gemini-1.5-flash`：稳定版本，快速处理
+  - `gemini-1.5-pro`：稳定版本，复杂推理
 
 - **输出格式**：
   - 纯文本模式：快速获取文字内容
@@ -193,10 +195,16 @@ git clone https://github.com/EatWorld/Umi-OCR-Gemini-Plugin.git
 | 配置项 | 说明 | 推荐值 |
 |--------|------|--------|
 | **API密钥** | Google AI Studio 获取的密钥 | 必填 |
-| **模型** | 选择 Gemini 模型 | `gemini-2.5-flash` |
+| **模型** | 选择 Gemini 模型 | `gemini-2.5-flash-preview-05-20` |
 | **超时时间** | 请求超时时间（秒） | `30` |
-| **重试次数** | 失败重试次数 | `1` |
+| **重试次数** | 失败重试次数 | `3` |
 | **代理地址** | HTTP/SOCKS5 代理（可选） | 按需填写 |
+
+> ⚠️ **重要提示**：填写模型名称时，请务必访问 [Google Gemini API 官方文档](https://ai.google.dev/gemini-api/docs/models/gemini) 确认最新的模型名称。模型名称必须完全准确，例如：
+> - `gemini-2.5-flash-preview-05-20`（推荐，性价比最高）
+> - `gemini-2.5-pro-preview-05-06`（最高精度）
+> - `gemini-1.5-flash`（稳定版本）
+> - `gemini-1.5-pro`（稳定版本）
 
 #### 局部配置
 
@@ -341,7 +349,7 @@ git clone https://github.com/EatWorld/Umi-OCR-Gemini-Plugin.git
 ### v1.0.0 (2024-06-03)
 
 - ✨ **首次发布**
-- 🚀 支持 Gemini 1.5 Flash 和 Pro 模型
+- 🚀 支持 Gemini 2.5 Flash 和 Pro 预览版模型
 - 📍 支持文字坐标提取
 - 🌍 支持多语言识别
 - 🌐 支持代理配置
@@ -360,7 +368,7 @@ git clone https://github.com/EatWorld/Umi-OCR-Gemini-Plugin.git
 ### 🛠️ 开发资源
 
 - 🔧 [Google AI Studio](https://aistudio.google.com/)
-- 📚 [Gemini API 文档](https://ai.google.dev/docs)
+- 📚 [Gemini API 文档](https://ai.google.dev/gemini-api/docs/models/gemini)
 - 🐛 [问题反馈](https://github.com/EatWorld/Umi-OCR-Gemini-Plugin/issues)
 
 ## 开源协议
