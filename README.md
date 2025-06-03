@@ -193,9 +193,9 @@ git clone https://github.com/EatWorld/Umi-OCR-Gemini-Plugin.git
 | 配置项 | 说明 | 推荐值 |
 |--------|------|--------|
 | **API密钥** | Google AI Studio 获取的密钥 | 必填 |
-| **模型** | 选择 Gemini 模型 | `gemini-1.5-flash` |
+| **模型** | 选择 Gemini 模型 | `gemini-2.5-flash` |
 | **超时时间** | 请求超时时间（秒） | `30` |
-| **重试次数** | 失败重试次数 | `3` |
+| **重试次数** | 失败重试次数 | `1` |
 | **代理地址** | HTTP/SOCKS5 代理（可选） | 按需填写 |
 
 #### 局部配置
