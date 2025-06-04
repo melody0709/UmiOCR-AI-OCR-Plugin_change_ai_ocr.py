@@ -31,10 +31,15 @@
 
 ## 对比识别效果
 
+### 设置界面
 ![设置界面](docs/images/0.jpg)
+### 识别图片：“对于及其复杂的手写信息，也能完美识别”
 ![识别图片](docs/images/1.png)
+### PadeleCOR识别效果，结果很差劲
 ![PaddleOCR识别效果，很差劲](docs/images/2.jpg)
+### WechatOCR识别效果，结果很差劲
 ![WechatOCR识别效果，很差劲](docs/images/3.jpg)
+### Gemini识别效果，非常完美
 ![GeminiOCR识别效果，完美！](docs/images/4.jpg)
 ## 功能特点
 
