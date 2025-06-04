@@ -32,7 +32,7 @@
 ## 对比识别效果
 
 ![设置界面](docs/images/0.jpg)
-![识别图片](docs/images/1.jpg)
+![识别图片](docs/images/1.png)
 ![PaddleOCR识别效果，很差劲](docs/images/2.jpg)
 ![WechatOCR识别效果，很差劲](docs/images/3.jpg)
 ![GeminiOCR识别效果，完美！](docs/images/4.jpg)
