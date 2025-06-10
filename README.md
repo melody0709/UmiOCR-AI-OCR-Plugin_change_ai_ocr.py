@@ -1,5 +1,10 @@
 # Umi-OCR Gemini Plugin
 
+## 目前该插件遇到一些问题
+### 1、OCR后的文字与原图文字无法对齐，试过很多坐标方法、缩放方法，都解决不了，这是通过API进行OCR的底层逻辑导致的，暂时无法解决
+### 2、进行多图识别时，容易出现API调用失败的问题，该问题可能与UMI-OCR本身软件是排队识别有关系，暂时也没法解决。
+### 因此，还是等待原作者自己退出的AI模型插件吧，如果你的要求不高，可以使用本插件处理一些复杂的OCR，如果遇到需要批量进行的OCR，本插件并不适合。
+
 [![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
