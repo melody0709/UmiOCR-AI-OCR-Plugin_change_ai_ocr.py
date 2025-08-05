@@ -1,6 +1,7 @@
-# Umi-OCR Gemini Plugin
+# Umi-OCR AI OCR Plugin
 
-
+## 已完成GEMINI集成，下一步将逐步适配主流AI的API。
+### 计划8月中旬完成该项目，喜欢就加个STAR，随时关注。
 [![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
