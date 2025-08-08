@@ -1,8 +1,8 @@
-# Umi-OCR 多厂商 AI OCR 插件
+# Umi-OCR AI OCR 插件
 
 ## 🚀 项目简介
 
-本插件为 **Umi-OCR** 提供多厂商 AI OCR 功能，支持主流 AI 服务提供商的视觉识别 API。作为离线 OCR 的强力补充，为用户提供更高精度、更广泛语言支持的云端文字识别服务。
+本插件为 **Umi-OCR** 提供多个主流AI模型的OCR 功能，支持主流 AI 服务提供商的视觉识别 API。作为离线 OCR 的强力补充，为用户提供更高精度、更广泛语言支持的云端文字识别服务。
 
 [![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -11,11 +11,11 @@
 
 ## 🌟 支持的 AI 服务商
 
-| 服务商 | 模型推荐 | 特点 |
+| 服务商 | 建议模型 | 特点 |
 |--------|----------|------|
-| **OpenAI** | GPT-4o, GPT-4o-mini | 高精度，多语言支持 |
-| **Google Gemini** | gemini-2.0-flash-exp | 速度快，成本低 |
-| **xAI Grok** | grok-vision-beta | 创新模型，独特优势 |
+| **OpenAI** | GPT-5, GPT-4o-mini | 高精度，多语言支持 |
+| **Google Gemini** | gemini-2.5-flash | 速度快，成本低 |
+| **xAI Grok** | grok-4 | 创新模型，独特优势 |
 | **OpenRouter** | 多种模型可选 | 统一接口，模型丰富 |
 
 ## 📋 关于 Umi-OCR
