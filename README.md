@@ -4,10 +4,6 @@
 
 本插件为 **Umi-OCR** 提供多个主流AI模型的OCR 功能，支持主流 AI 服务提供商的视觉识别 API。作为离线 OCR 的强力补充，为用户提供更高精度、更广泛语言支持的云端文字识别服务。
 
-[![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Multi-AI](https://img.shields.io/badge/AI-Multi--Provider-orange.svg)]()
 
 ## 🌟 支持的 AI 服务商
 
@@ -21,6 +17,11 @@
 ## 📋 关于 Umi-OCR
 
 **Umi-OCR** 是一款免费、开源、可批量的离线OCR软件，基于 PaddleOCR 开发。它具有以下特点：
+
+[![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![Multi-AI](https://img.shields.io/badge/AI-Multi--Provider-orange.svg)]()
 
 - 🆓 **完全免费**：无需付费，无广告，开源软件
 - 📱 **界面友好**：现代化的图形界面，操作简单直观
