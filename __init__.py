@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# Gemini OCR Plugin for Umi-OCR
+# AI OCR Plugin for Umi-OCR
 # Author: Assistant
-# Description: OCR plugin using Google Gemini API
+# Description: Multi-vendor AI OCR plugin supporting various AI providers
 
-from .gemini_ocr import Api
-from .gemini_ocr_config import globalOptions, localOptions
+from .ai_ocr import Api
+from .ai_ocr_config import globalOptions, localOptions
 
 # 插件信息
 PluginInfo = {
