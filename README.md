@@ -69,7 +69,7 @@
 |------|------|
 | 🚀 **高精度识别** | 基于最新的AI视觉模型，支持多种语言文字识别 |
 | 🌍 **多语言支持** | 支持中文、英文、日文、韩文、法文、德文、西班牙文、俄文、阿拉伯文等 |
-| ⚡ **多厂商选择** | 支持OpenAI、Gemini、xAI、OpenRouter等多个服务商 |
+| ⚡ **多厂商选择** | 支持OpenAI、Gemini、xAI、OpenRouter、硅基流动、豆包等多个服务商 |
 | 📍 **坐标提取** | 可选择输出文字的位置坐标信息 |
 | 🔧 **灵活配置** | 支持图像质量、尺寸、超时等多项参数调整 |
 | 🌐 **代理支持** | 支持HTTP/SOCKS5代理，适应不同网络环境 |
@@ -85,8 +85,6 @@
 
 ## 🛠️ 安装步骤
 
-### 方法一：直接下载
-
 1. 下载本项目的所有文件
 2. 将整个 `AIOCR` 文件夹复制到 Umi-OCR 的插件目录：
    ```
@@ -95,12 +93,6 @@
 3. 重启 Umi-OCR 软件
 4. 在OCR引擎选择中找到 "AI OCR（云端）"
 
-### 方法二：Git克隆
-
-```bash
-cd UmiOCR-data/plugins/
-git clone https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin.git AIOCR
-```
 
 ## ⚙️ 配置说明
 
@@ -127,6 +119,16 @@ git clone https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin.git AIOCR
 | **最大图像尺寸** | 控制上传图像的大小 | 1024/2048/4096像素 |
 
 ## 🔑 API密钥获取
+
+### 硅基流动 (SiliconFlow)
+1. 访问 [硅基流动](https://cloud.siliconflow.cn/)
+2. 注册账号并获取API密钥
+3. 支持多种开源视觉模型
+
+### 豆包 (Doubao)
+1. 访问 [火山引擎](https://console.volcengine.com/ark/)
+2. 开通豆包服务并获取API密钥
+3. 字节跳动自研多模态模型
 
 ### OpenAI
 1. 访问 [OpenAI Platform](https://platform.openai.com/api-keys)
@@ -167,7 +169,7 @@ git clone https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin.git AIOCR
 1. **API成本**：AI API按使用量计费，请注意控制使用频率
 2. **网络要求**：需要稳定的网络连接访问AI服务
 3. **图像大小**：建议设置合适的最大图像尺寸以控制成本
-4. **隐私安全**：图像会上传到AI服务器进行处理
+4. **隐私安全**：图像会直接上传到服务商服务器进行处理，插件作者不会得到你的任何图片和信息
 5. **速度限制**：云端API可能有速度限制，不适合大量并发请求
 6. **模型选择**：不同模型的精度和成本不同，请根据需求选择
 
@@ -209,7 +211,7 @@ git clone https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin.git AIOCR
 - **OpenRouter API文档**：[https://openrouter.ai/docs](https://openrouter.ai/docs)
 
 ## 📝 版本历史
-
+- **v2.1.0**：增加支持硅基流动、豆包视觉模型
 - **v2.0.0**：重构为多厂商AI OCR插件，支持OpenAI、Gemini、xAI、OpenRouter
 - **v1.2.0**：支持Gemini 2.5 Flash和Pro预览版模型，优化识别精度
 - **v1.1.0**：增加多语言支持，优化错误处理
@@ -223,13 +225,6 @@ git clone https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin.git AIOCR
 
 欢迎提交Issue和Pull Request来改进这个插件！
 
-### 贡献指南
-
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
 
 ## 💖 支持
 
