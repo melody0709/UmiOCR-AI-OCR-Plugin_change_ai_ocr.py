@@ -9,8 +9,8 @@
 
 | 服务商 | 建议模型 | 特点 |
 |--------|----------|------|
-| **硅基流动 (SiliconFlow)** | QwenVL系列 | 价格低，速度快，准确率超高，**最推荐** |
-| **豆包(Doubao)** | doubaovision系列 | 中文效果好，但模型调用复杂，性价比高 |
+| **硅基流动 (SiliconFlow)** | 多种模型可选，最推荐Qwen/Qwen2.5-VL-32B-Instruct，Qwen/Qwen2.5-VL-72B-Instruct | 开源模型多，价格低，速度快，准确率超高，**最推荐** |
+| **豆包(Doubao)** | Doubao-1.5-vision-pro-32k | 中文优化效果好，但模型调用复杂，性价比高 |
 | **OpenRouter** | 多种模型可选 | 统一接口，模型丰富 |
 | **OpenAI** | GPT-5, GPT-4o-mini | 高精度，多语言支持 |
 | **Google Gemini** | gemini-2.5-flash | 速度快，成本低 |
