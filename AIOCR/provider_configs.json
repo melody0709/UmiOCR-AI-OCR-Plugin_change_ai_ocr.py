@@ -1,0 +1,26 @@
+{
+  "openai": {
+    "model": "阿斯蒂芬阿斯蒂范德萨 ",
+    "api_key": "士大夫撒旦法阿斯蒂芬阿斯蒂芬阿斯蒂飞"
+  },
+  "gemini": {
+    "model": "22222222222222222",
+    "api_key": "1111111111111111"
+  },
+  "xai": {
+    "model": "grok-vision-beta",
+    "api_key": ""
+  },
+  "openrouter": {
+    "model": "anthropic/claude-3.5-sonnet",
+    "api_key": ""
+  },
+  "siliconflow": {
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "api_key": ""
+  },
+  "doubao": {
+    "model": "Qwen/Qwen2.5-VL-72B-Instruct",
+    "api_key": "11111"
+  }
+}
