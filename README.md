@@ -9,13 +9,14 @@
 
 | 服务商 | 建议模型 | 特点 |
 |--------|----------|------|
-| **硅基流动 (SiliconFlow)** | 多种模型可选，最推荐Qwen/Qwen2.5-VL-32B-Instruct，Qwen/Qwen2.5-VL-72B-Instruct | 开源模型多，价格低，速度快，准确率超高，**最推荐** |
-| **豆包(Doubao)** | Doubao-1.5-vision-pro-32k | 中文优化效果好，但模型调用复杂，性价比高 |
-| **OpenRouter** | 多种模型可选 | 统一接口，模型丰富 |
-| **OpenAI** | GPT-5, GPT-4o-mini | 高精度，多语言支持 |
+| **硅基流动 (SiliconFlow)** | Qwen/Qwen2.5-VL-32B-Instruct | 开源模型多，价格低，速度快，准确率超高，**最推荐** |
+| **阿里云百炼 (Alibaba)** | qwen-vl-plus-2025-08-15 | 专业OCR模型，中文识别优秀 |
+| **智谱AI (ZhipuAI)** | glm-4.5v | 国产大模型，多模态能力强 |
+| **豆包(Doubao)** | Doubao-1.5-vision-pro-32k | 中文优化效果好，性价比高 |
+| **OpenAI** | gpt-5-mini | 高精度，多语言支持 |
 | **Google Gemini** | gemini-2.5-flash | 速度快，成本低 |
 | **xAI Grok** | grok-4 | 创新模型，独特优势 |
-| **OpenRouter** | 多种模型可选 | 统一接口，模型丰富 |
+| **OpenRouter** | anthropic/claude-3.5-sonnet | 统一接口，模型丰富 |
 
 
 ## 📋 关于 Umi-OCR
@@ -100,14 +101,27 @@
 
 | 配置项 | 说明 | 推荐值 |
 |--------|------|--------|
-| **AI服务商** | 选择要使用的AI服务提供商 | 根据需求选择 |
-| **API密钥** | 对应服务商的API密钥 | 必填 |
-| **API基础URL** | 自定义API基础URL | 可选，留空使用默认 |
-| **模型** | 要使用的模型名称 | 根据服务商选择 |
+| **当前AI服务商** | 选择要使用的AI服务提供商 | 根据需求选择 |
+| **各服务商API密钥** | 每个服务商的专用API密钥 | 一次配置，永久保存 |
+| **各服务商模型** | 每个服务商的专用模型名称 | 预设推荐值，可自定义 |
 | **请求超时** | API请求的超时时间 | 30秒 |
-| **最大重试次数** | 请求失败时的重试次数 | 3次 |
 | **代理URL** | HTTP/SOCKS5代理设置 | 按需配置 |
 | **最大并发数** | 批量处理时的并发数 | 3-5个 |
+
+### 新版本特性
+
+**🎉 一次配置，永久使用**：
+- 现在可以同时配置所有服务商的API密钥和模型
+- 切换服务商时无需重新输入配置
+- 每个服务商都有独立的配置字段和分组
+- 预设了推荐的模型名称，开箱即用
+
+**📱 优化的界面布局**：
+- **顶部区域**：当前AI服务商选择、请求超时设置
+- **配置区域**：按服务商分组，每组包含API密钥和模型名称（预设最佳默认模型）
+- **高级设置**：代理URL、最大并发数等高级选项
+- **智能重试**：内置3次重试机制，无需手动配置
+
 
 ### 局部配置
 
@@ -144,6 +158,16 @@
 1. 访问 [xAI Console](https://console.x.ai/)
 2. 注册并获取API密钥
 
+### 阿里云百炼 (Alibaba)
+1. 访问 [阿里云百炼平台](https://bailian.console.aliyun.com/)
+2. 开通百炼服务并获取API密钥
+3. 支持通义千问系列视觉模型
+
+### 智谱AI (ZhipuAI)
+1. 访问 [智谱AI开放平台](https://open.bigmodel.cn/)
+2. 注册账号并创建API密钥
+3. 国产大模型，多模态能力强
+
 ### OpenRouter
 1. 访问 [OpenRouter](https://openrouter.ai/keys)
 2. 注册账号并创建API密钥
@@ -152,11 +176,19 @@
 
 ### 1. 配置插件
 
+**首次配置（推荐一次性配置所有服务商）**：
 1. 在Umi-OCR中选择 "AI OCR（云端）"
-2. 在全局设置中选择AI服务商
-3. 输入对应的API密钥
-4. 选择合适的模型
-5. 根据需要调整其他参数
+2. 在全局设置中配置所有你要使用的服务商：
+   - 填写 OpenAI API密钥和模型（如需要）
+   - 填写 Gemini API密钥和模型（如需要）
+   - 填写其他服务商的配置（如需要）
+3. 选择当前要使用的AI服务商
+4. 根据需要调整其他参数（超时、重试等）
+
+**日常使用**：
+- 只需在"当前AI服务商"下拉菜单中切换即可
+- 无需重新输入API密钥和模型
+- 所有配置都会自动保存
 
 ### 2. 开始识别
 
@@ -209,8 +241,12 @@
 - **Google Gemini API文档**：[https://ai.google.dev/gemini-api/docs](https://ai.google.dev/gemini-api/docs)
 - **xAI API文档**：[https://docs.x.ai/](https://docs.x.ai/)
 - **OpenRouter API文档**：[https://openrouter.ai/docs](https://openrouter.ai/docs)
+- **阿里云百炼 API文档**：[https://help.aliyun.com/zh/dashscope/](https://help.aliyun.com/zh/dashscope/)
+- **智谱AI API文档**：[https://open.bigmodel.cn/dev/api](https://open.bigmodel.cn/dev/api)
 
 ## 📝 版本历史
+- **v2.3.0**：🎉 **重大更新** - 新增阿里云百炼和智谱AI支持，更新所有服务商默认模型，优化界面布局，移除重试次数配置（内置3次）
+- **v2.2.0**：🎉 **重大更新** - 支持一次性配置所有服务商，切换时无需重新输入API密钥和模型
 - **v2.1.0**：增加支持硅基流动、豆包视觉模型
 - **v2.0.0**：重构为多厂商AI OCR插件，支持OpenAI、Gemini、xAI、OpenRouter
 - **v1.2.0**：支持Gemini 2.5 Flash和Pro预览版模型，优化识别精度
