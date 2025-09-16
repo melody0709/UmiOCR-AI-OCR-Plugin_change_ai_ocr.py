@@ -211,6 +211,10 @@
 2. 注册账号并获取API密钥
 3. 专业OCR平台，文档识别能力强
 
+### OpenRouter
+1. 访问 [OpenRouter](https://openrouter.ai/keys)
+2. 注册账号并创建API密钥
+
 ## 🏠 本地服务安装指南
 
 ### Ollama (完全离线)
@@ -269,9 +273,7 @@
 - **免费使用**：无API调用费用
 - **自主控制**：可选择和定制模型
 
-### OpenRouter
-1. 访问 [OpenRouter](https://openrouter.ai/keys)
-2. 注册账号并创建API密钥
+
 
 ## 📖 使用方法
 
