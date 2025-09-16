@@ -7,6 +7,7 @@
 
 ## 🌟 支持的 AI 服务商
 
+### 🌐 云端服务商
 | 服务商 | 建议模型 | 特点 |
 |--------|----------|------|
 | **硅基流动 (SiliconFlow)** | Qwen/Qwen2.5-VL-32B-Instruct | 开源模型多，价格低，速度快，准确率超高，**最推荐** |
@@ -17,6 +18,13 @@
 | **Google Gemini** | gemini-2.5-flash | 速度快，成本低 |
 | **xAI Grok** | grok-4 | 创新模型，独特优势 |
 | **OpenRouter** | anthropic/claude-3.5-sonnet | 统一接口，模型丰富 |
+| **MinerU** | mineru-ocr | 专业OCR平台，文档识别强 |
+
+### 🏠 本地服务商（离线识别）
+| 服务商 | 建议模型 | 特点 |
+|--------|----------|------|
+| **Ollama** | llava, llava:7b, bakllava | 🔒 **完全离线**，隐私保护，免费使用 |
+| **LM Studio** | llava, llava-1.5-7b-hf | 🔒 **完全离线**，图形界面友好，OpenAI兼容 |
 
 
 ## 📋 关于 Umi-OCR
@@ -46,6 +54,8 @@
 - **🔄 完美集成**：无缝融入Umi-OCR工作流程
 - **⚡ 灵活选择**：可根据需要在离线和云端OCR间切换
 - **🏢 多厂商支持**：避免单一依赖，提供更多选择
+- **🔒 隐私保护**：支持本地离线识别，数据不上传
+- **💰 成本控制**：本地服务免费，云端服务按需选择
 
 ## 📊 对比识别效果
 
@@ -108,6 +118,14 @@
 | **代理URL** | HTTP/SOCKS5代理设置 | 按需配置 |
 | **最大并发数** | 批量处理时的并发数 | 3-5个 |
 
+### 🆕 本地服务配置
+
+| 配置项 | 说明 | 默认值 |
+|--------|------|--------|
+| **Ollama 服务地址** | Ollama本地服务地址 | http://localhost:11434/api |
+| **LM Studio 服务地址** | LM Studio本地服务地址 | http://localhost:1234/v1 |
+| **本地模型名称** | 已下载的视觉模型名称 | llava |
+
 ### 新版本特性
 
 **🎉 一次配置，永久使用**：
@@ -122,6 +140,26 @@
 - **高级设置**：代理URL、最大并发数等高级选项
 - **智能重试**：内置3次重试机制，无需手动配置
 
+**📋 各服务商推荐模型**：
+
+#### 🌐 云端服务商
+| 服务商 | 推荐模型 | 特点 |
+|--------|----------|------|
+| **硅基流动** | `Qwen/Qwen2.5-VL-32B-Instruct` | 开源模型，价格低，准确率高 |
+| **阿里云百炼** | `qwen-vl-plus-2025-08-15` | 专业OCR模型，中文识别优秀 |
+| **智谱AI** | `glm-4.5v` | 国产大模型，多模态能力强 |
+| **豆包** | `Doubao-1.5-vision-pro-32k` | 中文优化，性价比高 |
+| **OpenAI** | `gpt-5-mini` | 高精度，多语言支持 |
+| **Google Gemini** | `gemini-2.5-flash` | 速度快，成本低 |
+| **xAI** | `grok-4` | 创新模型，独特优势 |
+| **OpenRouter** | `anthropic/claude-3.5-sonnet` | 统一接口，模型丰富 |
+| **MinerU** | `mineru-ocr` | 专业OCR平台，文档识别强 |
+
+#### 🏠 本地服务商（离线识别）
+| 服务商 | 推荐模型 | 特点 |
+|--------|----------|------|
+| **Ollama** | `llava`, `llava:7b`, `bakllava` | 🔒 完全离线，隐私保护，免费使用 |
+| **LM Studio** | `llava`, `llava-1.5-7b-hf` | 🔒 完全离线，图形界面友好 |
 
 ### 局部配置
 
@@ -167,6 +205,69 @@
 1. 访问 [智谱AI开放平台](https://open.bigmodel.cn/)
 2. 注册账号并创建API密钥
 3. 国产大模型，多模态能力强
+
+### MinerU
+1. 访问 [MinerU平台](https://mineru.net/)
+2. 注册账号并获取API密钥
+3. 专业OCR平台，文档识别能力强
+
+## 🏠 本地服务安装指南
+
+### Ollama (完全离线)
+1. **安装Ollama**：
+   ```bash
+   # Linux/macOS
+   curl -fsSL https://ollama.ai/install.sh | sh
+   
+   # Windows
+   # 从 https://ollama.ai 下载安装包
+   ```
+
+2. **下载视觉模型**：
+   ```bash
+   # 下载llava模型（推荐）
+   ollama pull llava
+   
+   # 或下载其他视觉模型
+   ollama pull llava:7b
+   ollama pull bakllava
+   ```
+
+3. **启动服务**：
+   ```bash
+   ollama serve
+   # 服务将在 http://localhost:11434 启动
+   ```
+
+4. **在插件中配置**：
+   - 服务商：选择 "Ollama (本地)"
+   - 模型：填入已下载的模型名（如 llava）
+   - API密钥：留空即可
+
+### LM Studio (图形界面)
+1. **下载安装**：
+   - 访问 [LM Studio官网](https://lmstudio.ai/)
+   - 下载并安装适合您系统的版本
+
+2. **下载模型**：
+   - 在LM Studio中搜索并下载支持视觉的模型
+   - 推荐：`llava-1.5-7b-hf`, `llava-1.6-34b-hf`
+
+3. **启动本地服务器**：
+   - 在LM Studio中点击"本地服务器"
+   - 选择已下载的视觉模型
+   - 启动服务器（默认端口1234）
+
+4. **在插件中配置**：
+   - 服务商：选择 "LM Studio (本地)"
+   - 模型：填入LM Studio中加载的模型名
+   - API密钥：留空或填入"not-needed"
+
+### 🔒 本地服务优势
+- **完全离线**：无需网络连接，数据不上传
+- **隐私保护**：所有处理在本地完成
+- **免费使用**：无API调用费用
+- **自主控制**：可选择和定制模型
 
 ### OpenRouter
 1. 访问 [OpenRouter](https://openrouter.ai/keys)
@@ -235,16 +336,23 @@
 
 ## 🔗 开发资源
 
+### 🛠️ 框架和工具
 - **Umi-OCR项目**：[https://github.com/hiroi-sora/Umi-OCR](https://github.com/hiroi-sora/Umi-OCR)
 - **插件开发文档**：[https://github.com/hiroi-sora/Umi-OCR_plugins](https://github.com/hiroi-sora/Umi-OCR_plugins)
+- **Ollama官网**：[https://ollama.ai/](https://ollama.ai/)
+- **LM Studio官网**：[https://lmstudio.ai/](https://lmstudio.ai/)
+
+### 🌐 云端服务API文档
 - **OpenAI API文档**：[https://platform.openai.com/docs](https://platform.openai.com/docs)
 - **Google Gemini API文档**：[https://ai.google.dev/gemini-api/docs](https://ai.google.dev/gemini-api/docs)
 - **xAI API文档**：[https://docs.x.ai/](https://docs.x.ai/)
 - **OpenRouter API文档**：[https://openrouter.ai/docs](https://openrouter.ai/docs)
 - **阿里云百炼 API文档**：[https://help.aliyun.com/zh/dashscope/](https://help.aliyun.com/zh/dashscope/)
 - **智谱AI API文档**：[https://open.bigmodel.cn/dev/api](https://open.bigmodel.cn/dev/api)
+- **MinerU API文档**：[https://mineru.net/apiManage/docs](https://mineru.net/apiManage/docs)
 
 ## 📝 版本历史
+- **v2.4.0**：🚀 **重大更新** - 新增本地离线识别支持！添加Ollama、LM Studio本地服务商，新增MinerU云端服务商，完全离线OCR成为可能
 - **v2.3.0**：🎉 **重大更新** - 新增阿里云百炼和智谱AI支持，更新所有服务商默认模型，优化界面布局，移除重试次数配置（内置3次）
 - **v2.2.0**：🎉 **重大更新** - 支持一次性配置所有服务商，切换时无需重新输入API密钥和模型
 - **v2.1.0**：增加支持硅基流动、豆包视觉模型
