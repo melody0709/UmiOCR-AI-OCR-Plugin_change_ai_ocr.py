@@ -246,6 +246,7 @@
 4. **在插件中配置**：
    - 服务商：选择 "Ollama (本地)"
    - 模型：填入已下载的模型名（如 llava）
+   - 默认API地址（可修改）：http://localhost:11434/api
    - API密钥：留空即可
 
 ### LM Studio (图形界面)
@@ -265,6 +266,7 @@
 4. **在插件中配置**：
    - 服务商：选择 "LM Studio (本地)"
    - 模型：填入LM Studio中加载的模型名
+   - 默认API地址（可修改）：http://localhost:1234/v1
    - API密钥：留空或填入"not-needed"
 
 ### 🔒 本地服务优势
