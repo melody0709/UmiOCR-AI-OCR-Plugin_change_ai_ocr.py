@@ -48,6 +48,10 @@ API请求的超时时间。,Timeout duration for API requests.,API请求的超�
 最大重试次数,Max Retries,最大重试次数,最大重試次數,最大リトライ回数
 次,times,次,次,回
 请求失败时的最大重试次数。,Maximum number of retries when request fails.,请求失败时的最大重试次数。,請求失敗時的最大重試次數。,リクエスト失敗時の最大リトライ回数。
+Ollama API地址,Ollama API Address,Ollama API地址,Ollama API地址,Ollama APIアドレス
+Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api,Ollama service address such as: http://localhost:11434/api or http://192.168.1.100:11434/api,Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api,Ollama服務地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api,Ollamaサービスアドレス、例：http://localhost:11434/api または http://192.168.1.100:11434/api
+LM Studio API地址,LM Studio API Address,LM Studio API地址,LM Studio API地址,LM Studio APIアドレス
+LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1,LM Studio service address such as: http://localhost:1234/v1 or http://192.168.1.100:1234/v1,LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1,LM Studio服務地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1,LM Studioサービスアドレス、例：http://localhost:1234/v1 または http://192.168.1.100:1234/v1
 代理URL,Proxy URL,代理URL,代理URL,プロキシURL
 可选。格式：http://proxy:port 或 socks5://proxy:port,Optional. Format: http://proxy:port or socks5://proxy:port,可选。格式：http://proxy:port 或 socks5://proxy:port,可選。格式：http://proxy:port 或 socks5://proxy:port,オプション。形式：http://proxy:port または socks5://proxy:port
 最大并发数,Max Concurrent,最大并发数,最大並發數,最大同時実行数

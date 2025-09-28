@@ -85,8 +85,8 @@ globalOptions = {
             ["alibaba", "阿里云百炼 (Alibaba)"],
             ["zhipu", "智谱AI (ZhipuAI)"],
             ["mineru", "MinerU"],
-            ["ollama", "Ollama (本地)"],
-            ["lmstudio", "LM Studio (本地)"],
+            ["ollama", "Ollama (支持自定义地址)"],
+            ["lmstudio", "LM Studio (支持自定义地址)"],
         ],
         "toolTip": tr("选择当前要使用的AI服务商。所有服务商的配置都会保存，切换时无需重新输入。"),
     },
@@ -213,6 +213,12 @@ globalOptions = {
     },
 
     # LM Studio配置
+    "lmstudio_api_base": {
+        "title": tr("LM Studio API地址"),
+        "default": "http://localhost:1234/v1",
+        "type": "text",
+        "toolTip": tr("LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1"),
+    },
     "lmstudio_api_key": {
         "title": tr("LM Studio API密钥"),
         "default": "",
@@ -235,12 +241,18 @@ globalOptions = {
     },
     "mineru_model": {
         "title": tr("MinerU 模型"),
-        "default": "mineru-ocr",
+        "default": "mineru-extract",
         "type": "text",
-        "toolTip": tr("MinerU模型名称，如：mineru-ocr"),
+        "toolTip": tr("MinerU模型名称（注意：MinerU主要用于PDF/文档解析，不支持直接图片OCR）"),
     },
 
     # Ollama配置
+    "ollama_api_base": {
+        "title": tr("Ollama API地址"),
+        "default": "http://localhost:11434/api",
+        "type": "text",
+        "toolTip": tr("Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api"),
+    },
     "ollama_api_key": {
         "title": tr("Ollama API密钥"),
         "default": "",

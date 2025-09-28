@@ -452,13 +452,13 @@ class ZhipuProvider(BaseProvider):
 
 # MinerU Provider
 class MinerUProvider(BaseProvider):
-    """MinerU服务提供商"""
+    """MinerU服务提供商 - 注意：MinerU 不支持直接图片 OCR，仅支持 PDF/文档解析"""
     
     def get_default_api_base(self):
-        return "https://api.mineru.net/v1"
+        return "https://mineru.net/api/v4"  # 使用官方 API 地址
         
     def get_default_model(self):
-        return ""
+        return "mineru-extract"
         
     def build_headers(self):
         return {
@@ -467,34 +467,33 @@ class MinerUProvider(BaseProvider):
         }
         
     def build_payload(self, image_base64, prompt):
+        # MinerU 主要用于 PDF/文档解析，不直接支持图片 OCR
+        # 这里返回一个错误提示
         return {
-            "model": self.model or self.get_default_model(),
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_base64}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "max_tokens": 4000
+            "_mineru_error": True,
+            "error_message": "MinerU 主要用于 PDF 和文档解析，不支持直接的图片 OCR。请使用其他 AI 服务商进行图片文字识别。"
         }
         
     def parse_response(self, response_text):
         try:
             data = json.loads(response_text)
-            if "choices" in data and len(data["choices"]) > 0:
-                content = data["choices"][0]["message"]["content"]
-                return content
+            # MinerU 的响应格式
+            if "data" in data:
+                # 如果是任务创建成功的响应
+                if isinstance(data["data"], dict) and "task_id" in data["data"]:
+                    return f"任务已创建，task_id: {data['data']['task_id']}"
+                # 如果是提取结果
+                elif isinstance(data["data"], dict) and "content" in data["data"]:
+                    return data["data"]["content"]
+                else:
+                    return str(data["data"])
+            elif "message" in data:
+                return data["message"]
             else:
-                return None
+                return str(data)
         except Exception as e:
+            if response_text.strip():
+                return response_text.strip()
             raise Exception(f"解析MinerU响应失败: {str(e)}")
 
 # Ollama Provider (本地)
@@ -617,6 +616,127 @@ class HTTPClient:
     def __init__(self, timeout=30, proxy_url=None):
         self.timeout = timeout
         self.proxy_url = proxy_url
+    
+    def post_multipart(self, url, headers=None, files=None, data=None):
+        """发送 multipart/form-data POST请求（用于文件上传）"""
+        import uuid
+        import mimetypes
+        
+        try:
+            # 生成边界字符串
+            boundary = f"----WebKitFormBoundary{uuid.uuid4().hex}"
+            boundary_bytes = boundary.encode('utf-8')
+            
+            # 构建 multipart/form-data 内容
+            body_parts = []
+            
+            # 添加普通字段
+            if data:
+                for key, value in data.items():
+                    part = b'--' + boundary_bytes + b'\r\n'
+                    part += f'Content-Disposition: form-data; name="{key}"\r\n'.encode('utf-8')
+                    part += b'\r\n'
+                    part += str(value).encode('utf-8') + b'\r\n'
+                    body_parts.append(part)
+            
+            # 添加文件字段
+            if files:
+                for field_name, file_data in files.items():
+                    if isinstance(file_data, dict):
+                        filename = file_data.get('filename', 'image.jpg')
+                        content = file_data.get('content', b'')
+                        content_type = file_data.get('content_type', 'image/jpeg')
+                    else:
+                        filename = 'image.jpg'
+                        content = file_data
+                        content_type = 'image/jpeg'
+                    
+                    part = b'--' + boundary_bytes + b'\r\n'
+                    part += f'Content-Disposition: form-data; name="{field_name}"; filename="{filename}"\r\n'.encode('utf-8')
+                    part += f'Content-Type: {content_type}\r\n'.encode('utf-8')
+                    part += b'\r\n'
+                    
+                    # 确保内容是字节类型
+                    if isinstance(content, str):
+                        content = content.encode('utf-8')
+                    elif isinstance(content, bytes):
+                        pass  # 已经是字节类型
+                    else:
+                        content = str(content).encode('utf-8')
+                    
+                    part += content + b'\r\n'
+                    body_parts.append(part)
+            
+            # 结束边界
+            end_boundary = b'--' + boundary_bytes + b'--\r\n'
+            body_parts.append(end_boundary)
+            
+            # 组装请求体
+            body_bytes = b''.join(body_parts)
+            
+            # 设置请求头
+            default_headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': f'multipart/form-data; boundary={boundary}',
+                'Content-Length': str(len(body_bytes))
+            }
+            
+            if headers:
+                # 不覆盖 Content-Type，因为 multipart 需要特定格式
+                for key, value in headers.items():
+                    if key.lower() != 'content-type':
+                        default_headers[key] = value
+            
+            # 创建请求
+            req = urllib.request.Request(url, data=body_bytes, headers=default_headers)
+            
+            # 创建 SSL 上下文
+            import ssl
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            # 设置代理和 SSL
+            if self.proxy_url:
+                proxy_handler = urllib.request.ProxyHandler({
+                    'http': self.proxy_url, 
+                    'https': self.proxy_url
+                })
+                https_handler = urllib.request.HTTPSHandler(context=ssl_context)
+                opener = urllib.request.build_opener(proxy_handler, https_handler)
+            else:
+                https_handler = urllib.request.HTTPSHandler(context=ssl_context)
+                opener = urllib.request.build_opener(https_handler)
+            
+            # 发送请求
+            response = opener.open(req, timeout=self.timeout)
+            response_data = response.read()
+            
+            # 处理响应
+            try:
+                response_text = response_data.decode('utf-8')
+            except UnicodeDecodeError:
+                response_text = response_data.decode('utf-8', errors='ignore')
+            
+            return {
+                'status_code': response.getcode(),
+                'text': response_text
+            }
+            
+        except urllib.error.HTTPError as e:
+            error_data = e.read()
+            try:
+                error_text = error_data.decode('utf-8')
+            except UnicodeDecodeError:
+                error_text = error_data.decode('utf-8', errors='ignore')
+            
+            return {
+                'status_code': e.code,
+                'text': error_text
+            }
+        except Exception as e:
+            raise Exception(f"Multipart HTTP请求失败: {str(e)}")
     
     def post(self, url, headers=None, data=None):
         """发送POST请求"""
@@ -751,19 +871,23 @@ class Api:
             api_key = self.global_config.get(f"{provider_name}_api_key", "")
             model = self.global_config.get(f"{provider_name}_model", "")
             
+            # 获取自定义 API 地址（如果有的话）
+            api_base = self.global_config.get(f"{provider_name}_api_base", "")
+            
             # 兼容新旧键名
             timeout = self.global_config.get("a_timeout", self.global_config.get("timeout", 30))
             proxy_url = self.global_config.get("z_proxy_url", self.global_config.get("proxy_url", ""))
             
-            if not api_key:
+            # 对于本地服务（Ollama、LM Studio），API密钥可以为空
+            if not api_key and provider_name not in ["ollama", "lmstudio"]:
                 return f"[Error] {provider_name} 的API密钥不能为空，请在设置中配置"
             
             if not model:
                 return f"[Error] {provider_name} 的模型不能为空，请在设置中配置"
             
-            # 创建Provider，使用内置的API基础URL
+            # 创建Provider，如果用户配置了自定义API地址则使用，否则使用默认值
             self.provider = ProviderFactory.create_provider(
-                provider_name, api_key, None, model, timeout, proxy_url
+                provider_name, api_key, api_base if api_base else None, model, timeout, proxy_url
             )
             
             # 创建HTTP客户端
@@ -957,7 +1081,7 @@ class Api:
         elif provider_name == "zhipu":
             url = f"{api_base}/chat/completions"
         elif provider_name == "mineru":
-            url = f"{api_base}/chat/completions"
+            url = f"{api_base}/extract/task"  # MinerU 使用提取任务接口
         elif provider_name == "ollama":
             url = f"{api_base}/generate"
         elif provider_name == "lmstudio":
@@ -969,8 +1093,13 @@ class Api:
         headers = self.provider.build_headers()
         payload = self.provider.build_payload(image_base64, prompt)
         
-        # 发送请求
-        response = self.http_client.post(url, headers, json.dumps(payload))
+        # 检查是否是 MinerU 的错误情况
+        if isinstance(payload, dict) and payload.get("_mineru_error"):
+            # MinerU 不支持直接图片 OCR，返回错误信息
+            raise Exception(payload.get("error_message", "MinerU 不支持此操作"))
+        else:
+            # 所有服务商使用标准 JSON 请求
+            response = self.http_client.post(url, headers, json.dumps(payload))
         
         if response['status_code'] != 200:
             raise Exception(f"API请求失败 (状态码: {response['status_code']}): {response['text']}")
