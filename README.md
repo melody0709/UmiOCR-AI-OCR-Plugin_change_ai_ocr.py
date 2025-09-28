@@ -91,8 +91,7 @@
 
 1. **Umi-OCR软件**：需要安装 [Umi-OCR](https://github.com/hiroi-sora/Umi-OCR) v2.0+
 2. **AI服务API密钥**：需要获取对应服务商的API密钥
-3. **网络连接**：需要能够访问对应的AI服务
-4. **Python环境**：Umi-OCR内置Python环境即可
+3. **网络连接**：需要能够访问对应的AI服务，国外模型通常需要魔法上网才行
 
 ## 🛠️ 安装步骤
 
