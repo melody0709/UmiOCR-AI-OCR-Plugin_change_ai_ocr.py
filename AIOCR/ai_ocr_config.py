@@ -8,18 +8,18 @@ tr = Translator(__file__, "i18n.csv")
 
 # 服务商配置映射
 PROVIDER_CONFIGS = {
-    # "openai": {
-    #     "api_base": "https://api.openai.com/v1",
-    #     "model": "",  # 用户自定义
-    # },
+    "openai": {
+        "api_base": "https://api.openai.com/v1",
+        "model": "",  # 用户自定义
+    },
     "gemini": {
         "api_base": "https://generativelanguage.googleapis.com/v1beta",
         "model": "",  # 用户自定义
     },
-    # "xai": {
-    #     "api_base": "https://api.x.ai/v1",
-    #     "model": "",  # 用户自定义
-    # },
+    "xai": {
+        "api_base": "https://api.x.ai/v1",
+        "model": "",  # 用户自定义
+    },
     "openrouter": {
         "api_base": "https://openrouter.ai/api/v1",
         "model": "",  # 用户自定义
@@ -28,6 +28,7 @@ PROVIDER_CONFIGS = {
         "api_base": "https://api.siliconflow.cn/v1",
         "model": "",  # 用户自定义
     },
+
     "doubao": {
         "api_base": "https://ark.cn-beijing.volces.com/api/v3",
         "model": "",  # 用户自定义
@@ -38,10 +39,6 @@ PROVIDER_CONFIGS = {
     },
     "alibaba": {
         "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        "model": "",  # 用户自定义
-    },
-    "mineru": {
-        "api_base": "https://mineru.net/api/v4",
         "model": "",  # 用户自定义
     },
     "ollama": {
@@ -112,15 +109,14 @@ globalOptions = {
         "title": tr("当前AI服务商"),
         "default": "openai",
         "optionsList": [
-            # ["openai", "OpenAI"],
+            ["openai", "OpenAI"],
             ["gemini", "Google Gemini"],
-            # ["xai", "xAI Grok"],
+            ["xai", "xAI Grok"],
             ["openrouter", "OpenRouter"],
             ["siliconflow", "硅基流动 (SiliconFlow)"],
             ["doubao", "豆包 (Doubao)"],
             ["alibaba", "阿里云百炼 (Alibaba)"],
             ["zhipu", "智谱AI (Z.AI)"],
-            ["mineru", "MinerU"],
             ["ollama", "Ollama (本地)"],
             ["groq", "Groq"],
             ["infinigence", "无问芯穷 (Infinigence)"],
@@ -184,18 +180,18 @@ globalOptions = {
     },
 
     # OpenAI配置
-    # "openai_api_key": {
-    #     "title": tr("OpenAI API密钥"),
-    #     "default": "",
-    #     "type": "text",
-    #     "toolTip": tr("请输入OpenAI的API密钥"),
-    # },
-    # "openai_model": {
-    #     "title": tr("OpenAI 模型"),
-    #     "default": "gpt-5-mini",
-    #     "type": "text",
-    #     "toolTip": tr("OpenAI模型名称，如：gpt-5-mini, gpt-4o"),
-    # },
+    "openai_api_key": {
+        "title": tr("OpenAI API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入OpenAI的API密钥"),
+    },
+    "openai_model": {
+        "title": tr("OpenAI 模型"),
+        "default": "gpt-5-mini",
+        "type": "text",
+        "toolTip": tr("OpenAI模型名称，如：gpt-5-mini, gpt-4o"),
+    },
 
     # OpenRouter配置
     "openrouter_api_key": {
@@ -226,18 +222,18 @@ globalOptions = {
     },
 
     # xAI配置
-    # "xai_api_key": {
-    #     "title": tr("xAI API密钥"),
-    #     "default": "",
-    #     "type": "text",
-    #     "toolTip": tr("请输入xAI的API密钥"),
-    # },
-    # "xai_model": {
-    #     "title": tr("xAI 模型"),
-    #     "default": "grok-4",
-    #     "type": "text",
-    #     "toolTip": tr("xAI模型名称，如：grok-4"),
-    # },
+    "xai_api_key": {
+        "title": tr("xAI API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入xAI的API密钥"),
+    },
+    "xai_model": {
+        "title": tr("xAI 模型"),
+        "default": "grok-4",
+        "type": "text",
+        "toolTip": tr("xAI模型名称，如：grok-4"),
+    },
 
     # 智谱AI配置
     "zhipu_api_key": {
@@ -252,21 +248,33 @@ globalOptions = {
         "type": "text",
         "toolTip": tr("智谱AI模型名称，如：glm-4.5v"),
     },
-    # MinerU配置
-    "mineru_api_key": {
-        "title": tr("MinerU API密钥"),
+
+    # LM Studio配置
+    "lmstudio_api_base": {
+        "title": tr("LM Studio API地址"),
+        "default": "http://localhost:1234/v1",
+        "type": "text",
+        "toolTip": tr("LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1"),
+    },
+    "lmstudio_api_key": {
+        "title": tr("LM Studio API密钥"),
         "default": "",
         "type": "text",
-        "toolTip": tr("请输入MinerU的API密钥"),
+        "toolTip": tr("LM Studio本地API密钥（可选，本地服务通常不需要）"),
     },
-    "mineru_model": {
-        "title": tr("MinerU 模型"),
-        "default": "mineru-ocr",
+    "lmstudio_model": {
+        "title": tr("LM Studio 模型"),
+        "default": "llava",
         "type": "text",
-        "toolTip": tr("MinerU模型名称，如：mineru-ocr"),
+        "toolTip": tr("LM Studio模型名称，如：llava, llava-1.5-7b-hf"),
     },
-
     # Ollama配置
+    "ollama_api_base": {
+        "title": tr("Ollama API地址"),
+        "default": "http://localhost:11434/api",
+        "type": "text",
+        "toolTip": tr("Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api"),
+    },
     "ollama_api_key": {
         "title": tr("Ollama API密钥"),
         "default": "",
@@ -349,11 +357,6 @@ globalOptions = {
         "toolTip": tr("浦源书生多模态模型，如：internvl3.5-241b-a28b"),
     },
 
-
-
-
-
-
     # 使用 z_ 前缀确保高级设置排在最后
     "z_proxy_url": {
         "title": tr("代理URL"),
@@ -364,7 +367,7 @@ globalOptions = {
     },
     "z_max_concurrent": {
         "title": tr("最大并发数"),
-        "default": 4,
+        "default": 3,
         "min": 1,
         "max": 10,
         "unit": tr("个"),
