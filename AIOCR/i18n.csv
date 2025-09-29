@@ -1,10 +1,41 @@
 key,en,zh,zh-tw,ja
 AI OCR 设置,AI OCR Settings,AI OCR 设置,AI OCR 設置,AI OCR 設定
-AI 服务商,AI Provider,AI 服务商,AI 服務商,AIプロバイダー
-选择要使用的AI服务提供商。切换时会自动保存和恢复对应的配置。,Select the AI service provider to use. Configurations will be automatically saved and restored when switching.,选择要使用的AI服务提供商。切换时会自动保存和恢复对应的配置。,選擇要使用的AI服務提供商。切換時會自動保存和恢復對應的配置。,使用するAIサービスプロバイダーを選択してください。切り替え時に対応する設定が自動的に保存・復元されます。
+当前AI服务商,Current AI Provider,当前AI服务商,當前AI服務商,現在のAIプロバイダー
+选择当前要使用的AI服务商。所有服务商的配置都会保存，切换时无需重新输入。,Select the current AI service provider to use. All provider configurations are saved and switching doesn't require re-entering credentials.,选择当前要使用的AI服务商。所有服务商的配置都会保存，切换时无需重新输入。,選擇當前要使用的AI服務商。所有服務商的配置都會保存，切換時無需重新輸入。,現在使用するAIサービスプロバイダーを選択してください。すべてのプロバイダー設定が保存され、切り替え時に再入力は不要です。
 硅基流动,SiliconFlow,硅基流动,硅基流動,SiliconFlow
-
 豆包,Doubao,豆包,豆包,Doubao
+OpenAI API密钥,OpenAI API Key,OpenAI API密钥,OpenAI API密鑰,OpenAI APIキー
+请输入OpenAI的API密钥,Please enter OpenAI API key,请输入OpenAI的API密钥,請輸入OpenAI的API密鑰,OpenAIのAPIキーを入力してください
+OpenAI 模型,OpenAI Model,OpenAI 模型,OpenAI 模型,OpenAI モデル
+OpenAI模型名称，如：gpt-4o, gpt-4o-mini,OpenAI model name such as: gpt-4o gpt-4o-mini,OpenAI模型名称，如：gpt-4o, gpt-4o-mini,OpenAI模型名稱，如：gpt-4o, gpt-4o-mini,OpenAIモデル名、例：gpt-4o, gpt-4o-mini
+Gemini API密钥,Gemini API Key,Gemini API密钥,Gemini API密鑰,Gemini APIキー
+请输入Google Gemini的API密钥,Please enter Google Gemini API key,请输入Google Gemini的API密钥,請輸入Google Gemini的API密鑰,Google GeminiのAPIキーを入力してください
+Gemini 模型,Gemini Model,Gemini 模型,Gemini 模型,Gemini モデル
+Gemini模型名称，如：gemini-2.0-flash-exp, gemini-1.5-pro,Gemini model name such as: gemini-2.0-flash-exp gemini-1.5-pro,Gemini模型名称，如：gemini-2.0-flash-exp, gemini-1.5-pro,Gemini模型名稱，如：gemini-2.0-flash-exp, gemini-1.5-pro,Geminiモデル名、例：gemini-2.0-flash-exp, gemini-1.5-pro
+xAI API密钥,xAI API Key,xAI API密钥,xAI API密鑰,xAI APIキー
+请输入xAI的API密钥,Please enter xAI API key,请输入xAI的API密钥,請輸入xAI的API密鑰,xAIのAPIキーを入力してください
+xAI 模型,xAI Model,xAI 模型,xAI 模型,xAI モデル
+xAI模型名称，如：grok-vision-beta,xAI model name such as: grok-vision-beta,xAI模型名称，如：grok-vision-beta,xAI模型名稱，如：grok-vision-beta,xAIモデル名、例：grok-vision-beta
+OpenRouter API密钥,OpenRouter API Key,OpenRouter API密钥,OpenRouter API密鑰,OpenRouter APIキー
+请输入OpenRouter的API密钥,Please enter OpenRouter API key,请输入OpenRouter的API密钥,請輸入OpenRouter的API密鑰,OpenRouterのAPIキーを入力してください
+OpenRouter 模型,OpenRouter Model,OpenRouter 模型,OpenRouter 模型,OpenRouter モデル
+OpenRouter模型名称，如：anthropic/claude-3.5-sonnet, google/gemini-pro-vision,OpenRouter model name such as: anthropic/claude-3.5-sonnet google/gemini-pro-vision,OpenRouter模型名称，如：anthropic/claude-3.5-sonnet, google/gemini-pro-vision,OpenRouter模型名稱，如：anthropic/claude-3.5-sonnet, google/gemini-pro-vision,OpenRouterモデル名、例：anthropic/claude-3.5-sonnet, google/gemini-pro-vision
+硅基流动 API密钥,SiliconFlow API Key,硅基流动 API密钥,硅基流動 API密鑰,SiliconFlow APIキー
+请输入硅基流动的API密钥,Please enter SiliconFlow API key,请输入硅基流动的API密钥,請輸入硅基流動的API密鑰,SiliconFlowのAPIキーを入力してください
+硅基流动 模型,SiliconFlow Model,硅基流动 模型,硅基流動 模型,SiliconFlow モデル
+硅基流动模型名称，如：Qwen/Qwen2.5-VL-32B-Instruct, Qwen/Qwen2.5-VL-72B-Instruct,SiliconFlow model name such as: Qwen/Qwen2.5-VL-32B-Instruct Qwen/Qwen2.5-VL-72B-Instruct,硅基流动模型名称，如：Qwen/Qwen2.5-VL-32B-Instruct, Qwen/Qwen2.5-VL-72B-Instruct,硅基流動模型名稱，如：Qwen/Qwen2.5-VL-32B-Instruct, Qwen/Qwen2.5-VL-72B-Instruct,SiliconFlowモデル名、例：Qwen/Qwen2.5-VL-32B-Instruct, Qwen/Qwen2.5-VL-72B-Instruct
+豆包 API密钥,Doubao API Key,豆包 API密钥,豆包 API密鑰,Doubao APIキー
+请输入豆包的API密钥,Please enter Doubao API key,请输入豆包的API密钥,請輸入豆包的API密鑰,DoubaoのAPIキーを入力してください
+豆包 模型,Doubao Model,豆包 模型,豆包 模型,Doubao モデル
+豆包模型名称，如：Doubao-1.5-vision-pro-32k,Doubao model name such as: Doubao-1.5-vision-pro-32k,豆包模型名称，如：Doubao-1.5-vision-pro-32k,豆包模型名稱，如：Doubao-1.5-vision-pro-32k,Doubaoモデル名、例：Doubao-1.5-vision-pro-32k
+阿里云百炼 API密钥,Alibaba API Key,阿里云百炼 API密钥,阿里雲百煉 API密鑰,Alibaba APIキー
+请输入阿里云百炼的API密钥,Please enter Alibaba API key,请输入阿里云百炼的API密钥,請輸入阿里雲百煉的API密鑰,AlibabaのAPIキーを入力してください
+阿里云百炼 模型,Alibaba Model,阿里云百炼 模型,阿里雲百煉 模型,Alibaba モデル
+阿里云百炼模型名称，如：qwen-vl-plus-2025-08-15,Alibaba model name such as: qwen-vl-plus-2025-08-15,阿里云百炼模型名称，如：qwen-vl-plus-2025-08-15,阿里雲百煉模型名稱，如：qwen-vl-plus-2025-08-15,Alibabaモデル名、例：qwen-vl-plus-2025-08-15
+智谱AI API密钥,ZhipuAI API Key,智谱AI API密钥,智譜AI API密鑰,ZhipuAI APIキー
+请输入智谱AI的API密钥,Please enter ZhipuAI API key,请输入智谱AI的API密钥,請輸入智譜AI的API密鑰,ZhipuAIのAPIキーを入力してください
+智谱AI 模型,ZhipuAI Model,智谱AI 模型,智譜AI 模型,ZhipuAI モデル
+智谱AI模型名称，如：glm-4.5v,ZhipuAI model name such as: glm-4.5v,智谱AI模型名称，如：glm-4.5v,智譜AI模型名稱，如：glm-4.5v,ZhipuAIモデル名、例：glm-4.5v
 API密钥,API Key,API密钥,API密鑰,APIキー
 请输入对应服务商的API密钥。,Please enter the API key for the corresponding service provider.,请输入对应服务商的API密钥。,請輸入對應服務商的API密鑰。,対応するサービスプロバイダーのAPIキーを入力してください。
 API基础URL,API Base URL,API基础URL,API基礎URL,APIベースURL
@@ -17,6 +48,10 @@ API请求的超时时间。,Timeout duration for API requests.,API请求的超�
 最大重试次数,Max Retries,最大重试次数,最大重試次數,最大リトライ回数
 次,times,次,次,回
 请求失败时的最大重试次数。,Maximum number of retries when request fails.,请求失败时的最大重试次数。,請求失敗時的最大重試次數。,リクエスト失敗時の最大リトライ回数。
+Ollama API地址,Ollama API Address,Ollama API地址,Ollama API地址,Ollama APIアドレス
+Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api,Ollama service address such as: http://localhost:11434/api or http://192.168.1.100:11434/api,Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api,Ollama服務地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api,Ollamaサービスアドレス、例：http://localhost:11434/api または http://192.168.1.100:11434/api
+LM Studio API地址,LM Studio API Address,LM Studio API地址,LM Studio API地址,LM Studio APIアドレス
+LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1,LM Studio service address such as: http://localhost:1234/v1 or http://192.168.1.100:1234/v1,LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1,LM Studio服務地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1,LM Studioサービスアドレス、例：http://localhost:1234/v1 または http://192.168.1.100:1234/v1
 代理URL,Proxy URL,代理URL,代理URL,プロキシURL
 可选。格式：http://proxy:port 或 socks5://proxy:port,Optional. Format: http://proxy:port or socks5://proxy:port,可选。格式：http://proxy:port 或 socks5://proxy:port,可選。格式：http://proxy:port 或 socks5://proxy:port,オプション。形式：http://proxy:port または socks5://proxy:port
 最大并发数,Max Concurrent,最大并发数,最大並發數,最大同時実行数
@@ -48,3 +83,15 @@ API请求的超时时间。,Timeout duration for API requests.,API请求的超�
 最大图像尺寸,Max Image Size,最大图像尺寸,最大圖像尺寸,最大画像サイズ
 （推荐）,(Recommended),（推荐）,（推薦）,（推奨）
 图像的最大边长。过大的图像会被压缩以节省API调用成本。,Maximum side length of the image. Oversized images will be compressed to save API call costs.,图像的最大边长。过大的图像会被压缩以节省API调用成本。,圖像的最大邊長。過大的圖像會被壓縮以節省API調用成本。,画像の最大辺長。大きすぎる画像はAPI呼び出しコストを節約するために圧縮されます。
+MinerU API密钥,MinerU API Key,MinerU API密钥,MinerU API密鑰,MinerU APIキー
+请输入MinerU的API密钥,Please enter MinerU API key,请输入MinerU的API密钥,請輸入MinerU的API密鑰,MinerU APIキーを入力してください
+MinerU 模型,MinerU Model,MinerU 模型,MinerU 模型,MinerU モデル
+MinerU模型名称，如：mineru-ocr,MinerU model name such as: mineru-ocr,MinerU模型名称，如：mineru-ocr,MinerU模型名稱，如：mineru-ocr,MinerUモデル名（例：mineru-ocr）
+Ollama API密钥,Ollama API Key,Ollama API密钥,Ollama API密鑰,Ollama APIキー
+Ollama本地API密钥（可选，本地服务通常不需要）,Ollama local API key (optional for local services),Ollama本地API密钥（可选，本地服务通常不需要）,Ollama本地API密鑰（可選，本地服務通常不需要）,Ollama ローカルAPIキー（オプション、ローカルサービスでは通常不要）
+Ollama 模型,Ollama Model,Ollama 模型,Ollama 模型,Ollama モデル
+Ollama模型名称，如：llava, llava:7b, bakllava,Ollama model name such as: llava llava:7b bakllava,Ollama模型名称，如：llava, llava:7b, bakllava,Ollama模型名稱，如：llava, llava:7b, bakllava,Ollamaモデル名（例：llava、llava:7b、bakllava）
+LM Studio API密钥,LM Studio API Key,LM Studio API密钥,LM Studio API密鑰,LM Studio APIキー
+LM Studio本地API密钥（可选，本地服务通常不需要）,LM Studio local API key (optional for local services),LM Studio本地API密钥（可选，本地服务通常不需要）,LM Studio本地API密鑰（可選，本地服務通常不需要）,LM Studio ローカルAPIキー（オプション、ローカルサービスでは通常不要）
+LM Studio 模型,LM Studio Model,LM Studio 模型,LM Studio 模型,LM Studio モデル
+LM Studio模型名称，如：llava, llava-1.5-7b-hf,LM Studio model name such as: llava llava-1.5-7b-hf,LM Studio模型名称，如：llava, llava-1.5-7b-hf,LM Studio模型名稱，如：llava, llava-1.5-7b-hf,LM Studioモデル名（例：llava、llava-1.5-7b-hf）

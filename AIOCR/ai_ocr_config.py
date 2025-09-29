@@ -65,43 +65,15 @@ def update_provider_config(provider):
         print(f"更新服务商配置时出错: {e}")
         return None
 
-# 全局配置项
-# 存储每个服务商的配置状态
-_provider_configs = {
-    "openai": {"model": "", "api_key": ""},
-    "gemini": {"model": "", "api_key": ""},
-    "xai": {"model": "", "api_key": ""},
-    "openrouter": {"model": "", "api_key": ""},
-    "siliconflow": {"model": "", "api_key": ""},
-
-    "doubao": {"model": "", "api_key": ""},
-}
-
-def switch_provider_config(new_provider, old_provider, configs):
-    """切换服务商时保存当前配置并加载新配置"""
-    try:
-        # 保存当前服务商的配置
-        if old_provider and old_provider in _provider_configs:
-            _provider_configs[old_provider]["model"] = configs.get("model", "")
-            _provider_configs[old_provider]["api_key"] = configs.get("api_key", "")
-        
-        # 加载新服务商的配置
-        if new_provider in _provider_configs:
-            return {
-                "model": _provider_configs[new_provider]["model"],
-                "api_key": _provider_configs[new_provider]["api_key"]
-            }
-    except Exception as e:
-        print(f"切换服务商配置时出错: {e}")
-    
-    return None
+# 全局配置项 - 新的配置结构，为每个服务商单独设置API密钥和模型
 
 globalOptions = {
     "title": tr("AI OCR 设置"),
     "type": "group",
-    
-    "provider": {
-        "title": tr("AI 服务商"),
+
+    # 使用 a_ 前缀确保基础设置排在最前面
+    "a_provider": {
+        "title": tr("当前AI服务商"),
         "default": "openai",
         "optionsList": [
             ["openai", "OpenAI"],
@@ -109,37 +81,16 @@ globalOptions = {
             ["xai", "xAI Grok"],
             ["openrouter", "OpenRouter (Claude)"],
             ["siliconflow", "硅基流动 (SiliconFlow)"],
-
             ["doubao", "豆包 (Doubao)"],
+            ["alibaba", "阿里云百炼 (Alibaba)"],
+            ["zhipu", "智谱AI (ZhipuAI)"],
+            ["mineru", "MinerU"],
+            ["ollama", "Ollama (支持自定义地址)"],
+            ["lmstudio", "LM Studio (支持自定义地址)"],
         ],
-        "toolTip": tr("选择要使用的AI服务提供商。切换时会自动保存和恢复对应的配置。"),
+        "toolTip": tr("选择当前要使用的AI服务商。所有服务商的配置都会保存，切换时无需重新输入。"),
     },
-    
-    "model": {
-        "title": tr("模型"),
-        "default": "",
-        "type": "text",
-        "toolTip": tr("输入要使用的模型名称。请根据所选服务商填写对应的模型名称。"),
-    },
-    
-    "api_key": {
-        "title": tr("API密钥"),
-        "default": "",
-        "type": "text",
-        "toolTip": tr("请输入对应服务商的API密钥。"),
-    },
-    
-    "max_retries": {
-        "title": tr("最大重试次数"),
-        "default": 3,
-        "min": 0,
-        "max": 10,
-        "unit": tr("次"),
-        "isInt": True,
-        "toolTip": tr("请求失败时的最大重试次数。"),
-    },
-    
-    "timeout": {
+    "a_timeout": {
         "title": tr("请求超时"),
         "default": 30,
         "min": 5,
@@ -148,16 +99,182 @@ globalOptions = {
         "isInt": True,
         "toolTip": tr("API请求的超时时间。"),
     },
-    
-    "proxy_url": {
+
+    # 阿里云百炼配置
+    "alibaba_api_key": {
+        "title": tr("阿里云百炼 API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入阿里云百炼的API密钥"),
+    },
+    "alibaba_model": {
+        "title": tr("阿里云百炼 模型"),
+        "default": "qwen-vl-plus-2025-08-15",
+        "type": "text",
+        "toolTip": tr("阿里云百炼模型名称，如：qwen-vl-plus-2025-08-15"),
+    },
+
+    # 豆包配置
+    "doubao_api_key": {
+        "title": tr("豆包 API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入豆包的API密钥"),
+    },
+    "doubao_model": {
+        "title": tr("豆包 模型"),
+        "default": "Doubao-1.5-vision-pro-32k",
+        "type": "text",
+        "toolTip": tr("豆包模型名称，如：Doubao-1.5-vision-pro-32k"),
+    },
+
+    # Google Gemini配置
+    "gemini_api_key": {
+        "title": tr("Gemini API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入Google Gemini的API密钥"),
+    },
+    "gemini_model": {
+        "title": tr("Gemini 模型"),
+        "default": "gemini-2.5-flash",
+        "type": "text",
+        "toolTip": tr("Gemini模型名称，如：gemini-2.5-flash, gemini-1.5-pro"),
+    },
+
+    # OpenAI配置
+    "openai_api_key": {
+        "title": tr("OpenAI API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入OpenAI的API密钥"),
+    },
+    "openai_model": {
+        "title": tr("OpenAI 模型"),
+        "default": "gpt-5-mini",
+        "type": "text",
+        "toolTip": tr("OpenAI模型名称，如：gpt-5-mini, gpt-4o"),
+    },
+
+    # OpenRouter配置
+    "openrouter_api_key": {
+        "title": tr("OpenRouter API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入OpenRouter的API密钥"),
+    },
+    "openrouter_model": {
+        "title": tr("OpenRouter 模型"),
+        "default": "anthropic/claude-3.5-sonnet",
+        "type": "text",
+        "toolTip": tr("OpenRouter模型名称，如：anthropic/claude-3.5-sonnet, google/gemini-pro-vision"),
+    },
+
+    # 硅基流动配置
+    "siliconflow_api_key": {
+        "title": tr("硅基流动 API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入硅基流动的API密钥"),
+    },
+    "siliconflow_model": {
+        "title": tr("硅基流动 模型"),
+        "default": "Qwen/Qwen2.5-VL-32B-Instruct",
+        "type": "text",
+        "toolTip": tr("硅基流动模型名称，如：Qwen/Qwen2.5-VL-32B-Instruct, Qwen/Qwen2.5-VL-72B-Instruct"),
+    },
+
+    # xAI配置
+    "xai_api_key": {
+        "title": tr("xAI API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入xAI的API密钥"),
+    },
+    "xai_model": {
+        "title": tr("xAI 模型"),
+        "default": "grok-4",
+        "type": "text",
+        "toolTip": tr("xAI模型名称，如：grok-4"),
+    },
+
+    # 智谱AI配置
+    "zhipu_api_key": {
+        "title": tr("智谱AI API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入智谱AI的API密钥"),
+    },
+    "zhipu_model": {
+        "title": tr("智谱AI 模型"),
+        "default": "glm-4.5v",
+        "type": "text",
+        "toolTip": tr("智谱AI模型名称，如：glm-4.5v"),
+    },
+
+    # LM Studio配置
+    "lmstudio_api_base": {
+        "title": tr("LM Studio API地址"),
+        "default": "http://localhost:1234/v1",
+        "type": "text",
+        "toolTip": tr("LM Studio服务地址，如：http://localhost:1234/v1 或 http://192.168.1.100:1234/v1"),
+    },
+    "lmstudio_api_key": {
+        "title": tr("LM Studio API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("LM Studio本地API密钥（可选，本地服务通常不需要）"),
+    },
+    "lmstudio_model": {
+        "title": tr("LM Studio 模型"),
+        "default": "llava",
+        "type": "text",
+        "toolTip": tr("LM Studio模型名称，如：llava, llava-1.5-7b-hf"),
+    },
+
+    # MinerU配置
+    "mineru_api_key": {
+        "title": tr("MinerU API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("请输入MinerU的API密钥"),
+    },
+    "mineru_model": {
+        "title": tr("MinerU 模型"),
+        "default": "mineru-extract",
+        "type": "text",
+        "toolTip": tr("MinerU模型名称（注意：MinerU主要用于PDF/文档解析，不支持直接图片OCR）"),
+    },
+
+    # Ollama配置
+    "ollama_api_base": {
+        "title": tr("Ollama API地址"),
+        "default": "http://localhost:11434/api",
+        "type": "text",
+        "toolTip": tr("Ollama服务地址，如：http://localhost:11434/api 或 http://192.168.1.100:11434/api"),
+    },
+    "ollama_api_key": {
+        "title": tr("Ollama API密钥"),
+        "default": "",
+        "type": "text",
+        "toolTip": tr("Ollama本地API密钥（可选，本地服务通常不需要）"),
+    },
+    "ollama_model": {
+        "title": tr("Ollama 模型"),
+        "default": "llava",
+        "type": "text",
+        "toolTip": tr("Ollama模型名称，如：llava, llava:7b, bakllava"),
+    },
+
+    # 使用 z_ 前缀确保高级设置排在最后
+    "z_proxy_url": {
         "title": tr("代理URL"),
         "default": "",
         "type": "text",
         "toolTip": tr("可选。格式：http://proxy:port 或 socks5://proxy:port"),
         "advanced": True,
     },
-    
-    "max_concurrent": {
+    "z_max_concurrent": {
         "title": tr("最大并发数"),
         "default": 3,
         "min": 1,
