@@ -45,51 +45,51 @@ class BaseProvider:
         raise NotImplementedError
 
 # OpenAI Provider
-# class OpenAIProvider(BaseProvider):
-#     """OpenAI服务提供商"""
-#     
-#     def get_default_api_base(self):
-#         return "https://api.openai.com/v1"
-#         
-#     def get_default_model(self):
-#         return "gpt-4o"
-#         
-#     def build_headers(self):
-#         return {
-#             "Content-Type": "application/json",
-#             "Authorization": f"Bearer {self.api_key}"
-#         }
-#         
-#     def build_payload(self, image_base64, prompt):
-#         return {
-#             "model": self.model or self.get_default_model(),
-#             "messages": [
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {"type": "text", "text": prompt},
-#                         {
-#                             "type": "image_url",
-#                             "image_url": {
-#                                 "url": f"data:image/jpeg;base64,{image_base64}"
-#                             }
-#                         }
-#                     ]
-#                 }
-#             ],
-#             "max_tokens": 5000
-#         }
-#         
-#     def parse_response(self, response_text):
-#         try:
-#             data = json.loads(response_text)
-#             if "choices" in data and len(data["choices"]) > 0:
-#                 content = data["choices"][0]["message"]["content"]
-#                 return content
-#             else:
-#                 return None
-#         except Exception as e:
-#             raise Exception(f"解析OpenAI响应失败: {str(e)}")
+class OpenAIProvider(BaseProvider):
+    """OpenAI服务提供商"""
+    
+    def get_default_api_base(self):
+        return "https://api.openai.com/v1"
+        
+    def get_default_model(self):
+        return "gpt-4o"
+        
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        
+    def build_payload(self, image_base64, prompt):
+        return {
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens": 4000
+        }
+        
+    def parse_response(self, response_text):
+        try:
+            data = json.loads(response_text)
+            if "choices" in data and len(data["choices"]) > 0:
+                content = data["choices"][0]["message"]["content"]
+                return content
+            else:
+                return None
+        except Exception as e:
+            raise Exception(f"解析OpenAI响应失败: {str(e)}")
 
 # Google Gemini Provider
 class GeminiProvider(BaseProvider):
@@ -163,7 +163,10 @@ class SiliconFlowProvider(BaseProvider):
                     ]
                 }
             ],
-            "max_tokens": 5000
+            "max_tokens": 4000,
+            "thinking": {
+                "type": "disabled"
+            }
         }
         
     def parse_response(self, response_text):
@@ -177,58 +180,94 @@ class SiliconFlowProvider(BaseProvider):
         except Exception as e:
             raise Exception(f"解析硅基流动响应失败: {str(e)}")
 
+# 阿里云百炼模型（千问）Provider
 # 阿里云百炼 Provider
 class AlibabaProvider(BaseProvider):
     """阿里云百炼服务提供商"""
-
+    
     def get_default_api_base(self):
-        # 已修正为兼容模式地址（问题1的修改）
-        return "https://dashscope.aliyuncs.com/compatible-mode/v1"
-
+        return "https://dashscope.aliyuncs.com/api/v1"
+        
     def get_default_model(self):
         return ""
-
+        
     def build_headers(self):
         return {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
         }
-
+        
     def build_payload(self, image_base64, prompt):
         return {
             "model": self.model or self.get_default_model(),
-            # 1. 移除`input`外层，将`messages`直接放在根节点
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},  # 明确文本类型
-                        # 2. 图像内容使用`image_url`格式（符合OpenAI规范）
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_base64}"
+            "input": {
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"text": prompt},
+                            {
+                                "image": f"data:image/jpeg;base64,{image_base64}"
                             }
-                        }
-                    ]
-                }
-            ],
-            "parameters": {
-                "max_tokens": 5000
+                        ]
+                    }
+                ]
             }
         }
-
+        
     def parse_response(self, response_text):
         try:
             data = json.loads(response_text)
-            # 兼容模式的响应结构与OpenAI一致，直接从根节点的`choices`提取内容
-            if "choices" in data and len(data["choices"]) > 0:
-                content = data["choices"][0]["message"]["content"]
-                return content
-            else:
-                return None
+            # 阿里云百炼的响应格式
+            if "output" in data:
+                if "choices" in data["output"] and len(data["output"]["choices"]) > 0:
+                    # 新版本API格式
+                    content = data["output"]["choices"][0]["message"]["content"]
+                    return self._extract_text_from_content(content)
+                elif "text" in data["output"]:
+                    # 旧版本API格式
+                    content = data["output"]["text"]
+                    return self._extract_text_from_content(content)
+            return None
         except Exception as e:
             raise Exception(f"解析阿里云百炼响应失败: {str(e)}")
+    
+    def _extract_text_from_content(self, content):
+        """从content中提取文本内容"""
+        if content is None:
+            return None
+            
+        # 如果是字符串，直接返回
+        if isinstance(content, str):
+            return content
+            
+        # 如果是列表，处理每个元素
+        if isinstance(content, list):
+            text_parts = []
+            for item in content:
+                if isinstance(item, str):
+                    text_parts.append(item)
+                elif isinstance(item, dict) and "text" in item:
+                    text_parts.append(item["text"])
+                elif isinstance(item, dict) and "content" in item:
+                    text_parts.append(str(item["content"]))
+                else:
+                    # 如果是其他类型，尝试转换为字符串
+                    text_parts.append(str(item))
+            return ' '.join(text_parts)
+            
+        # 如果是字典，尝试提取文本字段
+        if isinstance(content, dict):
+            if "text" in content:
+                return content["text"]
+            elif "content" in content:
+                return str(content["content"])
+            else:
+                # 如果没有明确的文本字段，返回整个字典的字符串表示
+                return str(content)
+                
+        # 其他类型，转换为字符串
+        return str(content)
 
 # 豆包 Provider
 class DoubaoProvider(BaseProvider):
@@ -328,55 +367,9 @@ class OpenRouterProvider(BaseProvider):
             raise Exception(f"解析OpenRouter响应失败: {str(e)}")
 
 # xAI Grok Provider
-# class XAIProvider(BaseProvider):
-#     def get_default_api_base(self):
-#         return "https://api.x.ai/v1"
-#
-#     def get_default_model(self):
-#         return ""
-#
-#     def build_headers(self):
-#         return {
-#             "Content-Type": "application/json",
-#             "Authorization": f"Bearer {self.api_key}"
-#         }
-#
-#     def build_payload(self, image_base64, prompt):
-#         return {
-#             "model": self.model or self.get_default_model(),
-#             "messages": [
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {"type": "text", "text": prompt},
-#                         {
-#                             "type": "image_url",
-#                             "image_url": {
-#                                 "url": f"data:image/jpeg;base64,{image_base64}"
-#                             }
-#                         }
-#                     ]
-#                 }
-#             ]
-#         }
-#
-#     def parse_response(self, response_text):
-#         try:
-#             data = json.loads(response_text)
-#             if "choices" in data and len(data["choices"]) > 0:
-#                 content = data["choices"][0]["message"]["content"]
-#                 return content
-#             else:
-#                 return None
-#         except Exception as e:
-#             raise Exception(f"解析xAI响应失败: {str(e)}")
-
-# 智谱AI Provider
-class ZhipuProvider(BaseProvider):
-    """智谱AI服务提供商"""
-    
+class XAIProvider(BaseProvider):
     def get_default_api_base(self):
-        return "https://open.bigmodel.cn/api/paas/v4"
+        return "https://api.x.ai/v1"
         
     def get_default_model(self):
         return ""
@@ -403,9 +396,54 @@ class ZhipuProvider(BaseProvider):
                         }
                     ]
                 }
+            ]
+        }
+        
+    def parse_response(self, response_text):
+        try:
+            data = json.loads(response_text)
+            if "choices" in data and len(data["choices"]) > 0:
+                content = data["choices"][0]["message"]["content"]
+                return content
+            else:
+                return None
+        except Exception as e:
+            raise Exception(f"解析xAI响应失败: {str(e)}")
+
+# 智谱AI Provider
+class ZhipuProvider(BaseProvider):
+    """智谱AI服务提供商"""
+
+    def get_default_api_base(self):
+        return "https://open.bigmodel.cn/api/paas/v4"
+
+    def get_default_model(self):
+        return ""
+        
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        
+    def build_payload(self, image_base64, prompt):
+        return {
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
             ],
-            "max_tokens": 5000,
-            # 添加思考模式配置，默认禁用深度思考
+            "max_tokens": 4000,
             "thinking": {
                 "type": "disabled"
             }
@@ -421,7 +459,6 @@ class ZhipuProvider(BaseProvider):
                 return None
         except Exception as e:
             raise Exception(f"解析智谱AI响应失败: {str(e)}")
-
 
 # 新增：魔搭 Provider
 class ModelScopeProvider(BaseProvider):
@@ -456,7 +493,10 @@ class ModelScopeProvider(BaseProvider):
                     ]
                 }
             ],
-            "max_tokens": 5000
+            "max_tokens": 4000,
+            "thinking": {
+                "type": "disabled"
+            }
         }
 
     def parse_response(self, response_text):
@@ -470,23 +510,56 @@ class ModelScopeProvider(BaseProvider):
         except Exception as e:
             raise Exception(f"解析魔搭响应失败: {str(e)}")
 
-
-# MinerU Provider
-class MinerUProvider(BaseProvider):
-    """MinerU服务提供商"""
-
+# Ollama Provider (本地)
+class OllamaProvider(BaseProvider):
+    """Ollama本地服务提供商"""
+    
     def get_default_api_base(self):
-        return "https://mineru.net/api/v4"
-
+        return "http://localhost:11434/api"
+        
     def get_default_model(self):
         return ""
+        
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json"
+        }
+        
+    def build_payload(self, image_base64, prompt):
+        return {
+            "model": self.model or self.get_default_model(),
+            "prompt": prompt,
+            "images": [image_base64],
+            "stream": False
+        }
+        
+    def parse_response(self, response_text):
+        try:
+            data = json.loads(response_text)
+            if "response" in data:
+                content = data["response"]
+                return content
+            else:
+                return None
+        except Exception as e:
+            raise Exception(f"解析Ollama响应失败: {str(e)}")
 
+# LM Studio Provider (本地)
+class LMStudioProvider(BaseProvider):
+    """LM Studio本地服务提供商"""
+    
+    def get_default_api_base(self):
+        return "http://localhost:1234/v1"
+        
+    def get_default_model(self):
+        return ""
+        
     def build_headers(self):
         return {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
+            "Authorization": f"Bearer {self.api_key}" if self.api_key else "Bearer not-needed"
         }
-
+        
     def build_payload(self, image_base64, prompt):
         return {
             "model": self.model or self.get_default_model(),
@@ -504,9 +577,9 @@ class MinerUProvider(BaseProvider):
                     ]
                 }
             ],
-            "max_tokens": 5000
+            "max_tokens": 4000
         }
-
+        
     def parse_response(self, response_text):
         try:
             data = json.loads(response_text)
@@ -516,45 +589,10 @@ class MinerUProvider(BaseProvider):
             else:
                 return None
         except Exception as e:
-            raise Exception(f"解析MinerU响应失败: {str(e)}")
-
-# Ollama Provider (本地)
-class OllamaProvider(BaseProvider):
-    """Ollama本地服务提供商"""
-
-    def get_default_api_base(self):
-        return "http://localhost:11434/api"
-
-    def get_default_model(self):
-        return ""
-
-    def build_headers(self):
-        return {
-            "Content-Type": "application/json"
-        }
-
-    def build_payload(self, image_base64, prompt):
-        return {
-            "model": self.model or self.get_default_model(),
-            "prompt": prompt,
-            "images": [image_base64],
-            "stream": False
-        }
-
-    def parse_response(self, response_text):
-        try:
-            data = json.loads(response_text)
-            if "response" in data:
-                content = data["response"]
-                return content
-            else:
-                return None
-        except Exception as e:
-            raise Exception(f"解析Ollama响应失败: {str(e)}")
+            raise Exception(f"解析LM Studio响应失败: {str(e)}")
 
 
 # Groq Provider
-# 修改GroqProvider类 (ai_ocr.py #startLine: 501 #endLine: 545)
 class GroqProvider(BaseProvider):
     """Groq服务提供商"""
 
@@ -778,7 +816,7 @@ class InternProvider(BaseProvider):
             ],
             "max_tokens": 5000,
             "stream": False,  # 禁用流式响应
-            "thinking_mode":False
+            "thinking_mode": False
         }
 
         # 对于intern-s1和intern-s1-mini模型，添加thinking_mode参数
@@ -812,25 +850,26 @@ class InternProvider(BaseProvider):
         except Exception as e:
             raise Exception(f"解析书生AI响应失败: {str(e)}")
 
+
 # Provider工厂
 class ProviderFactory:
     @staticmethod
     def create_provider(provider_name, api_key, api_base=None, model=None, timeout=30, proxy_url=None):
         providers = {
-            # "openai": OpenAIProvider,
+            "openai": OpenAIProvider,
             "gemini": GeminiProvider,
-            # "xai": XAIProvider,
+            "xai": XAIProvider,
             "openrouter": OpenRouterProvider,
             "siliconflow": SiliconFlowProvider,
             "doubao": DoubaoProvider,
             "alibaba": AlibabaProvider,
             "zhipu": ZhipuProvider,
-            "mineru": MinerUProvider,
             "ollama": OllamaProvider,
+            "lmstudio": LMStudioProvider,
             "groq": GroqProvider,
             "infinigence": InfinigenceProvider,
             "mistral": MistralProvider,
-            "modelscope": ModelScopeProvider, # 新增：魔搭 Provider
+            "modelscope": ModelScopeProvider,  # 新增：魔搭 Provider
             "intern": InternProvider,  # 新增：书生AI Provider
 
         }
@@ -856,6 +895,127 @@ class HTTPClient:
     def __init__(self, timeout=30, proxy_url=None):
         self.timeout = timeout
         self.proxy_url = proxy_url
+    
+    def post_multipart(self, url, headers=None, files=None, data=None):
+        """发送 multipart/form-data POST请求（用于文件上传）"""
+        import uuid
+        import mimetypes
+        
+        try:
+            # 生成边界字符串
+            boundary = f"----WebKitFormBoundary{uuid.uuid4().hex}"
+            boundary_bytes = boundary.encode('utf-8')
+            
+            # 构建 multipart/form-data 内容
+            body_parts = []
+            
+            # 添加普通字段
+            if data:
+                for key, value in data.items():
+                    part = b'--' + boundary_bytes + b'\r\n'
+                    part += f'Content-Disposition: form-data; name="{key}"\r\n'.encode('utf-8')
+                    part += b'\r\n'
+                    part += str(value).encode('utf-8') + b'\r\n'
+                    body_parts.append(part)
+            
+            # 添加文件字段
+            if files:
+                for field_name, file_data in files.items():
+                    if isinstance(file_data, dict):
+                        filename = file_data.get('filename', 'image.jpg')
+                        content = file_data.get('content', b'')
+                        content_type = file_data.get('content_type', 'image/jpeg')
+                    else:
+                        filename = 'image.jpg'
+                        content = file_data
+                        content_type = 'image/jpeg'
+                    
+                    part = b'--' + boundary_bytes + b'\r\n'
+                    part += f'Content-Disposition: form-data; name="{field_name}"; filename="{filename}"\r\n'.encode('utf-8')
+                    part += f'Content-Type: {content_type}\r\n'.encode('utf-8')
+                    part += b'\r\n'
+                    
+                    # 确保内容是字节类型
+                    if isinstance(content, str):
+                        content = content.encode('utf-8')
+                    elif isinstance(content, bytes):
+                        pass  # 已经是字节类型
+                    else:
+                        content = str(content).encode('utf-8')
+                    
+                    part += content + b'\r\n'
+                    body_parts.append(part)
+            
+            # 结束边界
+            end_boundary = b'--' + boundary_bytes + b'--\r\n'
+            body_parts.append(end_boundary)
+            
+            # 组装请求体
+            body_bytes = b''.join(body_parts)
+            
+            # 设置请求头
+            default_headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': f'multipart/form-data; boundary={boundary}',
+                'Content-Length': str(len(body_bytes))
+            }
+            
+            if headers:
+                # 不覆盖 Content-Type，因为 multipart 需要特定格式
+                for key, value in headers.items():
+                    if key.lower() != 'content-type':
+                        default_headers[key] = value
+            
+            # 创建请求
+            req = urllib.request.Request(url, data=body_bytes, headers=default_headers)
+            
+            # 创建 SSL 上下文
+            import ssl
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            # 设置代理和 SSL
+            if self.proxy_url:
+                proxy_handler = urllib.request.ProxyHandler({
+                    'http': self.proxy_url, 
+                    'https': self.proxy_url
+                })
+                https_handler = urllib.request.HTTPSHandler(context=ssl_context)
+                opener = urllib.request.build_opener(proxy_handler, https_handler)
+            else:
+                https_handler = urllib.request.HTTPSHandler(context=ssl_context)
+                opener = urllib.request.build_opener(https_handler)
+            
+            # 发送请求
+            response = opener.open(req, timeout=self.timeout)
+            response_data = response.read()
+            
+            # 处理响应
+            try:
+                response_text = response_data.decode('utf-8')
+            except UnicodeDecodeError:
+                response_text = response_data.decode('utf-8', errors='ignore')
+            
+            return {
+                'status_code': response.getcode(),
+                'text': response_text
+            }
+            
+        except urllib.error.HTTPError as e:
+            error_data = e.read()
+            try:
+                error_text = error_data.decode('utf-8')
+            except UnicodeDecodeError:
+                error_text = error_data.decode('utf-8', errors='ignore')
+            
+            return {
+                'status_code': e.code,
+                'text': error_text
+            }
+        except Exception as e:
+            raise Exception(f"Multipart HTTP请求失败: {str(e)}")
     
     def post(self, url, headers=None, data=None):
         """发送POST请求"""
@@ -970,7 +1130,7 @@ class Api:
         # 添加图像尺寸追踪变量
         self.original_size = None  # 保存原始图像尺寸
         self.scale_ratio = 1.0     # 保存缩放比例
-
+        
         # 兼容新旧键名：a_provider 或 provider
         provider = self.global_config.get('a_provider') or self.global_config.get('provider')
         if not provider:
@@ -990,19 +1150,23 @@ class Api:
             api_key = self.global_config.get(f"{provider_name}_api_key", "")
             model = self.global_config.get(f"{provider_name}_model", "")
             
+            # 获取自定义 API 地址（如果有的话）
+            api_base = self.global_config.get(f"{provider_name}_api_base", "")
+            
             # 兼容新旧键名
             timeout = self.global_config.get("a_timeout", self.global_config.get("timeout", 30))
             proxy_url = self.global_config.get("z_proxy_url", self.global_config.get("proxy_url", ""))
             
-            if not api_key:
+            # 对于本地服务（Ollama、LM Studio），API密钥可以为空
+            if not api_key and provider_name not in ["ollama", "lmstudio"]:
                 return f"[Error] {provider_name} 的API密钥不能为空，请在设置中配置"
             
             if not model:
                 return f"[Error] {provider_name} 的模型不能为空，请在设置中配置"
             
-            # 创建Provider，使用内置的API基础URL
+            # 创建Provider，如果用户配置了自定义API地址则使用，否则使用默认值
             self.provider = ProviderFactory.create_provider(
-                provider_name, api_key, None, model, timeout, proxy_url
+                provider_name, api_key, api_base if api_base else None, model, timeout, proxy_url
             )
             
             # 创建HTTP客户端
@@ -1078,24 +1242,24 @@ class Api:
             image_data = base64.b64decode(image_base64)
             image = Image.open(BytesIO(image_data))
             self.original_size = image.size
-
+            
             # 检查是否需要处理
             max_size = self.local_config.get("max_image_size", 1536)
             quality_setting = self.local_config.get("image_quality", "auto")
-
+            
             need_resize = max(image.size) > max_size
             need_convert = image.mode != 'RGB'
             need_quality_adjust = quality_setting != "auto"
-
+            
             # 如果不需要任何处理，直接返回原图
             if not (need_resize or need_convert or need_quality_adjust):
                 self.scale_ratio = 1.0
                 return image_base64
-
+            
             # 只在需要时进行转换
             if need_convert:
                 image = image.convert('RGB')
-
+            
             # 只在需要时进行缩放
             if need_resize:
                 self.scale_ratio = max_size / max(image.size)
@@ -1103,7 +1267,7 @@ class Api:
                 image = image.resize(new_size, Image.Resampling.LANCZOS)
             else:
                 self.scale_ratio = 1.0
-
+            
             # 只在需要时调整质量
             if need_quality_adjust:
                 quality_map = {"high": 95, "medium": 85, "low": 75}
@@ -1115,7 +1279,7 @@ class Api:
             buffer = BytesIO()
             image.save(buffer, format='JPEG', quality=quality, optimize=True)
             return base64.b64encode(buffer.getvalue()).decode('utf-8')
-
+            
         except Exception as e:
             # 预处理失败时保持原图
             self.original_size = None
@@ -1192,15 +1356,15 @@ class Api:
             model = self.provider.model or self.provider.get_default_model()
             url = f"{api_base}/models/{model}:generateContent?key={self.provider.api_key}"
         elif provider_name == "alibaba":
-            url = f"{api_base}/chat/completions" #原地址：/services/aigc/text-generation/generation
+            url = f"{api_base}/services/aigc/multimodal-generation/generation"
         elif provider_name == "zhipu":
             url = f"{api_base}/chat/completions"
-        elif provider_name == "mineru":
-            url = f"{api_base}/extract/task"
         elif provider_name == "ollama":
             url = f"{api_base}/generate"
+        elif provider_name == "lmstudio":
+            url = f"{api_base}/chat/completions"
         elif provider_name == "mistral":
-            url = f"{api_base}/chat/completions" # Mistral OCR专用端点
+            url = f"{api_base}/chat/completions"  # Mistral OCR专用端点
         else:
             url = f"{api_base}/chat/completions"
         
@@ -1208,18 +1372,16 @@ class Api:
         headers = self.provider.build_headers()
         payload = self.provider.build_payload(image_base64, prompt)
         
-        # 发送请求
-        response = self.http_client.post(url, headers, json.dumps(payload))
+        # 检查是否是 MinerU 的错误情况
+        if isinstance(payload, dict) and payload.get("_mineru_error"):
+            # MinerU 不支持直接图片 OCR，返回错误信息
+            raise Exception(payload.get("error_message", "MinerU 不支持此操作"))
+        else:
+            # 所有服务商使用标准 JSON 请求
+            response = self.http_client.post(url, headers, json.dumps(payload))
         
         if response['status_code'] != 200:
-            # raise Exception(f"API请求失败 (状态码: {response['status_code']}): {response['text']}")
-            error_msg = f"Groq API错误 (状态码: {response['status_code']}): {response['text']}"
-            # 补充常见错误提示
-            if response['status_code'] == 413:
-                error_msg += "（可能是图像过大，超过4MB限制）"
-            elif response['status_code'] == 400:
-                error_msg += "（可能是分辨率超限或格式错误）"
-            raise Exception(error_msg)
+            raise Exception(f"API请求失败 (状态码: {response['status_code']}): {response['text']}")
         
         return response['text']
     
@@ -1255,7 +1417,7 @@ class Api:
                     content = str(content)
             elif not isinstance(content, str):
                 content = str(content)
-
+            
             # 尝试解析JSON
             if content.strip().startswith('{'):
                 data = json.loads(content)
@@ -1288,7 +1450,7 @@ class Api:
         # 快速检查：如果没有缩放或无原始尺寸信息，直接返回
         if not self.original_size or self.scale_ratio == 1.0:
             return box
-
+        
         # 快速映射：批量处理坐标
         try:
             mapped_box = []
@@ -1302,25 +1464,25 @@ class Api:
         except:
             # 如果映射失败，返回原坐标
             return box
-
+    
     def _generate_estimated_boxes(self, lines):
         """为纯文本生成估算的边界框"""
         # 使用简化的计算以提高速度
         img_width, img_height = self.original_size if self.original_size else (800, 600)
-
+        
         # 预计算常量
         line_height = min(30, img_height // max(len(lines), 1))
         margin_left = int(img_width * 0.05)
         margin_top = int(img_height * 0.05)
         max_width = int(img_width * 0.9)
-
+        
         result_data = []
         y_offset = margin_top
-
+        
         for line in lines:
             # 简化的宽度计算
             text_width = min(len(line) * 12, max_width)  # 减少字符宽度计算
-
+            
             # 直接创建边界框
             box = [
                 [margin_left, y_offset],
@@ -1328,12 +1490,12 @@ class Api:
                 [margin_left + text_width, y_offset + line_height],
                 [margin_left, y_offset + line_height]
             ]
-
+            
             result_data.append({"text": line, "box": box, "score": 1.0})
             y_offset += int(line_height * 1.2)
-
+        
         return result_data
-
+    
     def _parse_text_only(self, content):
         """解析纯文本"""
         # 确保content是字符串，但要正确处理不同类型
@@ -1356,7 +1518,7 @@ class Api:
                 content = str(content)
         elif not isinstance(content, str):
             content = str(content)
-
+            
         # 清理内容
         content = content.strip()
         
