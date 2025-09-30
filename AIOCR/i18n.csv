@@ -101,3 +101,4 @@ Mistral视觉模型名称，如：pixtral-12b-2409, mistral-large-latest,"Mistra
 最大图像尺寸,Max Image Size,最大图像尺寸,最大圖像尺寸,最大画像サイズ,,,,,,,,,
 （推荐）,(Recommended),（推荐）,（推薦）,（推奨）,,,,,,,,,
 图像的最大边长。过大的图像会被压缩以节省API调用成本。,Maximum side length of the image. Oversized images will be compressed to save API call costs.,图像的最大边长。过大的图像会被压缩以节省API调用成本。,圖像的最大邊長。過大的圖像會被壓縮以節省API調用成本。,画像の最大辺長。大きすぎる画像はAPI呼び出しコストを節約するために圧縮されます。,,,,,,,,,
+
