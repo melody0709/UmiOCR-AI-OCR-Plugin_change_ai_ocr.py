@@ -2,7 +2,7 @@
 
 ## 🚀 项目简介
 
-本插件为 **Umi-OCR** 提供多个主流AI模型的OCR 功能，支持主流 AI 服务提供商的视觉识别 API。作为离线 OCR 的强力补充，为用户提供更高精度、更广泛语言支持的云端文字识别服务。
+本插件为 **Umi-OCR** 提供 **13个主流AI服务商** 的OCR功能，支持云端和本地AI服务的视觉识别API。作为离线OCR的强力补充，为用户提供更高精度、更广泛语言支持的智能文字识别服务。
 
 
 ## 🌟 支持的 AI 服务商
@@ -18,13 +18,23 @@
 | **Google Gemini** | gemini-2.5-flash | 速度快，成本低 |
 | **xAI Grok** | grok-4 | 创新模型，独特优势 |
 | **OpenRouter** | anthropic/claude-3.5-sonnet | 统一接口，模型丰富 |
-| **MinerU** | mineru-ocr | 专业OCR平台，文档识别强 |
+| **Groq** | llama-3.3-70b-versatile | 高性能推理，速度极快 |
+| **魔搭 (ModelScope)** | Qwen/Qwen-VL-Plus | 阿里达摩院开源平台，模型丰富 |
+| **无问芯穹 (Infinigence)** | kimi-k2-instruct | 月之暗面AI平台，长文本处理强 |
+| **Mistral AI** | pixtral-12b-2409 | 欧洲AI公司，视觉模型优秀 |
+| **浦源书生 (Intern)** | internvl3.5-241b-a28b | 学术界AI平台，多模态能力强 |
 
 ### 🏠 本地服务商（离线识别）
 | 服务商 | 建议模型 | 特点 |
 |--------|----------|------|
-| **Ollama** | llava, llava:7b, bakllava | 🔒 **完全离线**，隐私保护，免费使用 |
-| **LM Studio** | llava, llava-1.5-7b-hf | 🔒 **完全离线**，图形界面友好，OpenAI兼容 |
+| **Ollama** | llava, llava:7b, bakllava | 🔒 **完全离线**，隐私保护，免费使用，**支持自定义地址** |
+| **LM Studio** | llava, llava-1.5-7b-hf | 🔒 **完全离线**，图形界面友好，OpenAI兼容，**支持自定义地址** |
+
+> 💡 **自定义地址功能**：Ollama 和 LM Studio 支持自定义 API 地址，您可以：
+> - 🌐 连接到局域网内其他机器上的 Ollama/LM Studio 服务
+> - ⚡ 在配置较低的机器上运行 Umi-OCR，连接到高性能机器上的 AI 服务  
+> - 🔧 灵活部署，充分利用现有硬件资源
+> - 📡 支持远程AI服务，实现分布式OCR处理
 
 
 ## 📋 关于 Umi-OCR
@@ -175,14 +185,34 @@
 2. 注册账号并创建API密钥
 3. 国产大模型，多模态能力强
 
-### MinerU
-1. 访问 [MinerU平台](https://mineru.net/)
-2. 注册账号并获取API密钥
-3. 专业OCR平台，文档识别能力强
-
 ### OpenRouter
 1. 访问 [OpenRouter](https://openrouter.ai/keys)
 2. 注册账号并创建API密钥
+
+### Groq
+1. 访问 [Groq Console](https://console.groq.com/)
+2. 注册账号并获取API密钥
+3. 高性能推理平台，速度极快
+
+### 魔搭 (ModelScope)
+1. 访问 [魔搭社区](https://www.modelscope.cn/)
+2. 注册账号并获取访问令牌 (Access Token)
+3. 阿里达摩院开源AI平台
+
+### 无问芯穹 (Infinigence)
+1. 访问 [无问芯穹平台](https://cloud.infini-ai.com/)
+2. 注册账号并获取API密钥
+3. 月之暗面AI平台，长文本处理能力强
+
+### Mistral AI
+1. 访问 [Mistral Platform](https://console.mistral.ai/)
+2. 注册账号并创建API密钥
+3. 欧洲AI公司，视觉模型优秀
+
+### 浦源书生 (Intern)
+1. 访问 [书生·浦语平台](https://chat.intern-ai.org.cn/)
+2. 注册账号并获取API密钥
+3. 学术界AI平台，多模态能力强
 
 ## 🏠 本地服务安装指南
 
@@ -273,7 +303,8 @@
 
 
 ## 📝 版本历史
-- **v2.4.0**：🚀 **重大更新** - 新增本地离线识别支持！添加Ollama、LM Studio本地服务商，新增MinerU云端服务商，完全离线OCR成为可能。优化识别文字对齐，现在识别后的文字与原图蚊子位置只有轻微偏移。
+- **v2.5.0**：🎉 **社区贡献更新** - 新增5个AI服务商支持！添加Groq（高性能推理）、魔搭ModelScope（阿里达摩院）、无问芯穹Infinigence（月之暗面）、Mistral AI（欧洲AI）、浦源书生Intern（学术界AI），大幅扩展AI服务商选择。优化本地服务自定义地址功能。
+- **v2.4.0**：🚀 **重大更新** - 新增本地离线识别支持！添加Ollama、LM Studio本地服务商，支持自定义API地址，完全离线OCR成为可能。优化识别文字对齐，现在识别后的文字与原图位置只有轻微偏移。
 - **v2.3.0**：新增阿里云百炼和智谱AI支持，更新所有服务商默认模型，优化界面布局，移除重试次数配置（内置3次）
 - **v2.2.0**：支持一次性配置所有服务商，切换时无需重新输入API密钥和模型
 - **v2.1.0**：增加支持硅基流动、豆包视觉模型
