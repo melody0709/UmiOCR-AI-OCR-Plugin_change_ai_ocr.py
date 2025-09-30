@@ -163,7 +163,10 @@ class SiliconFlowProvider(BaseProvider):
                     ]
                 }
             ],
-            "max_tokens": 4000
+            "max_tokens": 4000,
+            "thinking": {
+                "type": "disabled"
+            }
         }
         
     def parse_response(self, response_text):
@@ -299,7 +302,11 @@ class DoubaoProvider(BaseProvider):
                     ]
                 }
             ],
-            "max_tokens": 4000
+            "max_tokens": 5000,
+            # 添加思考模式配置，默认禁用深度思考
+            "thinking": {
+                "type": "disabled"
+            }
         }
         
     def parse_response(self, response_text):
@@ -406,10 +413,10 @@ class XAIProvider(BaseProvider):
 # 智谱AI Provider
 class ZhipuProvider(BaseProvider):
     """智谱AI服务提供商"""
-    
+
     def get_default_api_base(self):
         return "https://open.bigmodel.cn/api/paas/v4"
-        
+
     def get_default_model(self):
         return ""
         
@@ -436,7 +443,10 @@ class ZhipuProvider(BaseProvider):
                     ]
                 }
             ],
-            "max_tokens": 4000
+            "max_tokens": 4000,
+            "thinking": {
+                "type": "disabled"
+            }
         }
         
     def parse_response(self, response_text):
@@ -450,51 +460,55 @@ class ZhipuProvider(BaseProvider):
         except Exception as e:
             raise Exception(f"解析智谱AI响应失败: {str(e)}")
 
-# MinerU Provider
-class MinerUProvider(BaseProvider):
-    """MinerU服务提供商 - 注意：MinerU 不支持直接图片 OCR，仅支持 PDF/文档解析"""
-    
+# 新增：魔搭 Provider
+class ModelScopeProvider(BaseProvider):
+    """魔搭服务提供商"""
+
     def get_default_api_base(self):
-        return "https://mineru.net/api/v4"  # 使用官方 API 地址
-        
+        return "https://api-inference.modelscope.cn/v1"
+
     def get_default_model(self):
-        return "mineru-extract"
-        
+        return ""
+
     def build_headers(self):
         return {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
         }
-        
+
     def build_payload(self, image_base64, prompt):
-        # MinerU 主要用于 PDF/文档解析，不直接支持图片 OCR
-        # 这里返回一个错误提示
         return {
-            "_mineru_error": True,
-            "error_message": "MinerU 主要用于 PDF 和文档解析，不支持直接的图片 OCR。请使用其他 AI 服务商进行图片文字识别。"
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens": 4000,
+            "thinking": {
+                "type": "disabled"
+            }
         }
-        
+
     def parse_response(self, response_text):
         try:
             data = json.loads(response_text)
-            # MinerU 的响应格式
-            if "data" in data:
-                # 如果是任务创建成功的响应
-                if isinstance(data["data"], dict) and "task_id" in data["data"]:
-                    return f"任务已创建，task_id: {data['data']['task_id']}"
-                # 如果是提取结果
-                elif isinstance(data["data"], dict) and "content" in data["data"]:
-                    return data["data"]["content"]
-                else:
-                    return str(data["data"])
-            elif "message" in data:
-                return data["message"]
+            if "choices" in data and len(data["choices"]) > 0:
+                content = data["choices"][0]["message"]["content"]
+                return content
             else:
-                return str(data)
+                return None
         except Exception as e:
-            if response_text.strip():
-                return response_text.strip()
-            raise Exception(f"解析MinerU响应失败: {str(e)}")
+            raise Exception(f"解析魔搭响应失败: {str(e)}")
 
 # Ollama Provider (本地)
 class OllamaProvider(BaseProvider):
@@ -577,6 +591,266 @@ class LMStudioProvider(BaseProvider):
         except Exception as e:
             raise Exception(f"解析LM Studio响应失败: {str(e)}")
 
+
+# Groq Provider
+class GroqProvider(BaseProvider):
+    """Groq服务提供商"""
+
+    def get_default_api_base(self):
+        return "https://api.groq.com/openai/v1"
+
+    def get_default_model(self):
+        # 1. 更换为支持图像的模型
+        return "meta-llama/llama-4-scout-17b-16e-instruct"
+
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+
+    def build_payload(self, image_base64, prompt):
+        # 2. 增加图像大小检查，符合Groq的4MB限制
+        # base64编码后大小 = 原始二进制大小 * 1.333，因此原始大小上限为4MB / 1.333 ≈ 3MB
+        max_base64_size = 4 * 1024 * 1024  # 4MB
+        if len(image_base64) > max_base64_size:
+            raise Exception("图像过大，Groq API要求base64编码图像不超过4MB")
+
+        return {
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_completion_tokens": 5000,
+            "temperature": 0.2  # 3. 增加温度参数，提高稳定性
+        }
+
+    def parse_response(self, response_text):
+        try:
+            # 4. 增加响应内容检查
+            if not response_text.strip():
+                raise Exception("收到空响应")
+
+            data = json.loads(response_text)
+
+            # 5. 更详细的错误处理
+            if "error" in data:
+                raise Exception(f"API错误: {data['error'].get('message', str(data['error']))}")
+
+            if "choices" in data and len(data["choices"]) > 0:
+                content = data["choices"][0]["message"]["content"]
+                return content
+            else:
+                return None
+        except json.JSONDecodeError as e:
+            # 6. 提供更详细的解析错误信息
+            raise Exception(f"解析Groq响应失败: 无效的JSON格式。响应内容: {response_text[:100]}... 错误: {str(e)}")
+        except Exception as e:
+            raise Exception(f"解析Groq响应失败: {str(e)}")
+
+
+# 无问芯穷 Provider
+class InfinigenceProvider(BaseProvider):
+    """无问芯穷服务提供商"""
+
+    def get_default_api_base(self):
+        return "https://cloud.infini-ai.com/maas/v1"
+
+    def get_default_model(self):
+        return ""
+
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+
+    def build_payload(self, image_base64, prompt):
+        return {
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "stream": False,
+            "enable_thinking": False,
+            "temperature": 0.7,
+            "max_tokens": 5000
+        }
+
+    def parse_response(self, response_text):
+        try:
+            data = json.loads(response_text)
+            if "choices" in data and len(data["choices"]) > 0:
+                content = data["choices"][0]["message"]["content"]
+                return content
+            else:
+                return None
+        except Exception as e:
+            raise Exception(f"解析无问芯穷响应失败: {str(e)}")
+
+
+# Mistral Provider
+class MistralProvider(BaseProvider):
+    """Mistral AI服务提供商 (使用视觉模型)"""
+
+    def get_default_api_base(self):
+        return "https://api.mistral.ai/v1"
+
+    def get_default_model(self):
+        return "pixtral-12b-2409"  # 默认使用视觉模型
+
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+
+    def build_payload(self, image_base64, prompt):
+        # 结构与OpenAI视觉模型完全兼容
+        return {
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens": 5000,
+            "stream": False  # 关键修复：明确禁用流式响应
+        }
+
+    def parse_response(self, response_text):
+        # 响应格式与OpenAI视觉模型完全兼容
+        # 增加健壮性：先检查响应是否为空
+        if not response_text or not response_text.strip():
+            raise Exception("解析Mistral响应失败: 服务器返回了空响应。")
+
+        try:
+            data = json.loads(response_text)
+            if "choices" in data and len(data["choices"]) > 0:
+                # 检查 content 是否为 None
+                message = data["choices"][0].get("message", {})
+                content = message.get("content")
+                if content is not None:
+                    return content
+                else:
+                    # 如果 content 为 null，则返回空结果而不是报错
+                    return ""
+            else:
+                # 如果响应中没有 choices，检查是否有 error 字段
+                if "error" in data:
+                    error_msg = data["error"].get("message", str(data["error"]))
+                    raise Exception(f"API返回错误: {error_msg}")
+                return None
+        except json.JSONDecodeError:
+            # 关键调试优化：在JSON解析失败时，打印出服务器返回的原始内容（截取前500个字符）
+            raise Exception(f"解析Mistral响应失败: 无效的JSON格式。服务器返回内容: {response_text[:500]}")
+        except Exception as e:
+            raise Exception(f"解析Mistral响应失败: {str(e)}")
+
+
+# 书生AI Provider
+"""书生AI服务提供商"""
+class InternProvider(BaseProvider):
+    """书生AI服务提供商"""
+
+    def get_default_api_base(self):
+        return "https://chat.intern-ai.org.cn/api/v1"
+
+    def get_default_model(self):
+        return "internvl3.5-241b-a28b"  # 默认使用多模态模型
+
+    def build_headers(self):
+        return {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+
+    def build_payload(self, image_base64, prompt):
+        payload = {
+            "model": self.model or self.get_default_model(),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens": 5000,
+            "stream": False,  # 禁用流式响应
+            "thinking_mode": False
+        }
+
+        # 对于intern-s1和intern-s1-mini模型，添加thinking_mode参数
+        model = self.model or self.get_default_model()
+        if model in ["intern-s1", "intern-s1-mini"]:
+            # 可以根据需要设置为True或False，这里默认禁用
+            payload["thinking_mode"] = False
+
+        return payload
+
+    def parse_response(self, response_text):
+        try:
+            # 检查响应是否为空
+            if not response_text or not response_text.strip():
+                raise Exception("服务器返回了空响应")
+
+            data = json.loads(response_text)
+
+            # 检查是否有错误信息
+            if "error" in data:
+                error_msg = data["error"].get("message", str(data["error"]))
+                raise Exception(f"API错误: {error_msg}")
+
+            if "choices" in data and len(data["choices"]) > 0:
+                content = data["choices"][0]["message"]["content"]
+                return content
+            else:
+                return None
+        except json.JSONDecodeError:
+            raise Exception(f"解析书生AI响应失败: 无效的JSON格式。服务器返回内容: {response_text[:500]}")
+        except Exception as e:
+            raise Exception(f"解析书生AI响应失败: {str(e)}")
+
+
 # Provider工厂
 class ProviderFactory:
     @staticmethod
@@ -590,9 +864,14 @@ class ProviderFactory:
             "doubao": DoubaoProvider,
             "alibaba": AlibabaProvider,
             "zhipu": ZhipuProvider,
-            "mineru": MinerUProvider,
             "ollama": OllamaProvider,
             "lmstudio": LMStudioProvider,
+            "groq": GroqProvider,
+            "infinigence": InfinigenceProvider,
+            "mistral": MistralProvider,
+            "modelscope": ModelScopeProvider,  # 新增：魔搭 Provider
+            "intern": InternProvider,  # 新增：书生AI Provider
+
         }
         
         if provider_name not in providers:
@@ -1080,12 +1359,12 @@ class Api:
             url = f"{api_base}/services/aigc/multimodal-generation/generation"
         elif provider_name == "zhipu":
             url = f"{api_base}/chat/completions"
-        elif provider_name == "mineru":
-            url = f"{api_base}/extract/task"  # MinerU 使用提取任务接口
         elif provider_name == "ollama":
             url = f"{api_base}/generate"
         elif provider_name == "lmstudio":
             url = f"{api_base}/chat/completions"
+        elif provider_name == "mistral":
+            url = f"{api_base}/chat/completions"  # Mistral OCR专用端点
         else:
             url = f"{api_base}/chat/completions"
         
