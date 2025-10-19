@@ -82,7 +82,7 @@
 ![WechatOCR识别效果，很差劲](docs/images/3.jpg)
 
 ### AI OCR(模型：gemini 2.5 flash)识别效果，非常完美
-![AI OCR识别效果，完美！](docs/images/4.jpg)
+![AI OCR识别效果，完美！](docs/images/4.png)
 
 ## ✨ 功能特点
 
