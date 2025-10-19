@@ -55,6 +55,13 @@
 ### AI OCR(模型：gemini 2.5 flash)识别效果，非常完美
 ![AI OCR识别效果，完美！](docs/images/4.png)
 
+<img width="694" height="816" alt="b4da7aee-f434-438b-b1a3-1be668e4d534" src="https://github.com/user-attachments/assets/0b1c3cf4-0431-4d96-a264-518d1643c1b8" />
+
+<img width="698" height="818" alt="98ae9ee9-c3fd-4cd0-a172-449be0e3d37a" src="https://github.com/user-attachments/assets/2b2e818b-e833-41e1-8535-77102f1e7fda" />
+
+
+
+
 ## ✨ 功能特点
 
 | 功能 | 描述 |
