@@ -37,35 +37,6 @@
 > - 📡 支持远程AI服务，实现分布式OCR处理
 
 
-## 📋 关于 Umi-OCR
-
-**Umi-OCR** 是一款免费、开源、可批量的离线OCR软件，基于 PaddleOCR 开发。它具有以下特点：
-
-[![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Multi-AI](https://img.shields.io/badge/AI-Multi--Provider-orange.svg)]()
-
-- 🆓 **完全免费**：无需付费，无广告，开源软件
-- 📱 **界面友好**：现代化的图形界面，操作简单直观
-- 🔄 **批量处理**：支持批量图片OCR，提高工作效率
-- 🌐 **多语言支持**：支持中文、英文、日文、韩文等多种语言
-- 🔌 **插件系统**：支持扩展插件，功能可定制
-- 💻 **跨平台**：支持Windows、Linux等操作系统
-
-**项目地址**：[https://github.com/hiroi-sora/Umi-OCR](https://github.com/hiroi-sora/Umi-OCR)
-
-## 🎯 插件特色
-
-### 为什么选择多厂商 AI OCR 插件？
-
-- **🎯 精度提升**：利用最先进的多模态AI模型
-- **🌍 语言覆盖**：支持更多语言和复杂文档格式
-- **🔄 完美集成**：无缝融入Umi-OCR工作流程
-- **⚡ 灵活选择**：可根据需要在离线和云端OCR间切换
-- **🏢 多厂商支持**：避免单一依赖，提供更多选择
-- **🔒 隐私保护**：支持本地离线识别，数据不上传
-- **💰 成本控制**：本地服务免费，云端服务按需选择
 
 ## 📊 对比识别效果
 
@@ -105,8 +76,8 @@
 
 ## 🛠️ 安装步骤
 
-1. 下载本项目的所有文件
-2. 将整个 `AIOCR` 文件夹复制到 Umi-OCR 的插件目录：
+1. [AIOCR](https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin/releases)releases下载最新版本插件
+2. 将压缩包中的AIOCR文件解压至 Umi-OCR 的插件目录：
    ```
    UmiOCR-data/plugins/
    ```
@@ -149,6 +120,7 @@
 - 效果：在保证坐标对齐的前提下，整图识别速度可降至约`10s`。
 - 如图所示，请按上述数值进行设置；其余保持默认即可。
 ![AI OCR识别效果，完美！](docs/images/5.png)
+
 
 ## ⚠️ 注意事项
 
