@@ -76,7 +76,7 @@
 
 ## 🛠️ 安装步骤
 
-1. [AIOCR](https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin/releases)releases下载最新版本插件
+1. [AIOCR-releases](https://github.com/EatWorld/UmiOCR-AI-OCR-Plugin/releases)中下载最新版本插件
 2. 将压缩包中的AIOCR文件解压至 Umi-OCR 的插件目录：
    ```
    UmiOCR-data/plugins/
