@@ -4,6 +4,22 @@
 
 本插件为 **Umi-OCR** 提供 **13个主流AI服务商** 的OCR功能，支持云端和本地AI服务的视觉识别API。作为离线OCR的强力补充，为用户提供更高精度、更广泛语言支持的智能文字识别服务。
 
+## 📋 关于 Umi-OCR
+
+**Umi-OCR** 是一款免费、开源、可批量的离线OCR软件，基于 PaddleOCR 开发。它具有以下特点：
+
+[![GitHub stars](https://img.shields.io/github/stars/hiroi-sora/Umi-OCR?style=social)](https://github.com/hiroi-sora/Umi-OCR)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![Multi-AI](https://img.shields.io/badge/AI-Multi--Provider-orange.svg)]()
+
+- 🆓 **完全免费**：无需付费，无广告，开源软件
+- 📱 **界面友好**：现代化的图形界面，操作简单直观
+- 🔄 **批量处理**：支持批量图片OCR，提高工作效率
+- 🌐 **多语言支持**：支持中文、英文、日文、韩文等多种语言
+- 🔌 **插件系统**：支持扩展插件，功能可定制
+- 💻 **跨平台**：支持Windows、Linux等操作系统
+
 
 ## 🌟 支持的 AI 服务商
 
@@ -55,9 +71,11 @@
 ### AI OCR(模型：gemini 2.5 flash)识别效果，非常完美
 ![AI OCR识别效果，完美！](docs/images/4.png)
 
-<img width="694" height="816" alt="b4da7aee-f434-438b-b1a3-1be668e4d534" src="https://github.com/user-attachments/assets/0b1c3cf4-0431-4d96-a264-518d1643c1b8" />
+<img width="542" height="742" alt="image" src="https://github.com/user-attachments/assets/08df5339-7f6c-4061-a822-efe8a2d1da67" />
 
-<img width="698" height="818" alt="98ae9ee9-c3fd-4cd0-a172-449be0e3d37a" src="https://github.com/user-attachments/assets/2b2e818b-e833-41e1-8535-77102f1e7fda" />
+<img width="541" height="739" alt="image" src="https://github.com/user-attachments/assets/81d0bba5-eed2-4a72-bfc9-0dcf8a3aacf3" />
+
+
 
 
 
@@ -104,6 +122,15 @@
    - 填写 Gemini API密钥和模型（如需要）
    - 填写其他服务商的配置（如需要）
 3. 选择当前要使用的AI服务商并点击**应用修改**
+4. 在局部设置中选择“识别策略”：
+   - 双通道：AI高精度识别（含位置版）：输出带坐标的文本，适合PDF等文档识别。
+   - 仅AI高精度识别：直接输出纯文本，不含坐标，适合只需要文本信息的识别。
+5. 设置参数：
+   - 裁剪边缘补白 ： 2 px
+   - 最大识别框数 ： 30–100 （按图片复杂度与成本权衡）
+   - 并发识别数 ： 3–6 （视本机与服务商速率）
+   - 最小框面积 ： 0 或 100–500 px^2 （有小字场景建议 0 ）
+<img width="598" height="789" alt="image" src="https://github.com/user-attachments/assets/17dcfc1a-4c4b-40a8-b686-ece5ecafe19a" />
 
 **日常使用**：
 - 只需在"当前AI服务商"下拉菜单中切换并点击**应用修改**即可
@@ -116,18 +143,6 @@
 - 插件会自动调用对应的AI API进行识别
 
 
-## 🚀 启用双通道识别（推荐）
-- 位置：打开插件“AI OCR（云端）”→ 设置面板，勾选`启用检测-识别双通道`。
-- 推荐参数（可按需微调）：
-  - `裁剪边缘补白`：`2 px`
-  - `本地高置信度直接采用`：`0.92`
-  - `双通道最大识别框数`：`30`
-  - `双通道并发识别数`：`3`（性能好可设为 `4–6`）
-  - `双通道最小框面积`：`0`（默认值，避免漏掉小字）
-- 效果：在保证坐标对齐的前提下，整图识别速度没有变慢。
-- 如图所示，打开双通道，保持下图的默认数值设置即可。
-![AI OCR识别效果，完美！](docs/images/5.png)
-
 
 ## ⚠️ 注意事项
 
@@ -137,6 +152,7 @@
 4. **隐私安全**：图像会直接上传到服务商服务器进行处理，插件作者不会得到你的任何图片和信息
 5. **速度限制**：云端API可能有速度限制，不适合大量并发请求
 6. **模型选择**：不同模型的精度和成本不同，请根据需求选择
+7. **中文变体保留**：当语言为“自动/中文”时，插件已在提示词中明确禁止简繁转换、全角/半角转换和字符归一化；繁简混排保持混合状态；逐字抄写不重写。
 
 
 
@@ -272,6 +288,7 @@
 
 
 ## 📝 版本历史
+- **v2.7.0**：调整双通道策略，现在双通道:AI高精度识别(含位置版)识别精度更高、识别速度速度更快。
 - **v2.6.0**：🚀 **重大更新** 完美解决大模型OCR无法文字对齐的问题！新增并完善双通道识别，通过本地PaddleOCR检测识别真实坐标，再用所用AI模型识别文本，识别文字与原图文字完美对齐！并发识别、框数限制、本地高分直接采用、裁剪补白等参数可调，整图识别速度较之前版本更快。
 - **v2.5.0**：🎉 **社区贡献更新** - 新增5个AI服务商支持！添加Groq（高性能推理）、魔搭ModelScope（阿里达摩院）、无问芯穹Infinigence（月之暗面）、Mistral AI（欧洲AI）、浦源书生Intern（学术界AI），大幅扩展AI服务商选择。优化本地服务自定义地址功能。
 - **v2.4.0**：🚀 **重大更新** - 新增本地离线识别支持！添加Ollama、LM Studio本地服务商，支持自定义API地址，完全离线OCR成为可能。优化识别文字对齐，现在识别后的文字与原图位置只有轻微偏移。
