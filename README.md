@@ -53,6 +53,26 @@
 > - 📡 支持远程AI服务，实现分布式OCR处理
 
 
+---
+## 针对原项目只是修改了ai_ocr.py,能够截图返回markdown格式,识别图表,公式,全靠AI修改,问的是gemini 2.**5pro**
+- 用的模型是   OpenRouter 模型  google/gemini-2.5-flash-lite ,费用大概每次看图片大小  美金 0.0003-$0.0006,1刀够用3000次了,还行吧 
+  
+
+- 您必须在 Umi-OCR 插件设置中：
+   识别策略：选择 仅AI高精度识别
+   输出格式：选择 仅文字
+   为什么？
+   默认的 双通道：AI高精度识别 策略是逐行识别的。它会先把图片切成一行一行，再发给 AI。AI 无法看到完整的表格或公式，所以它绝对无法生成 Markdown 表格或 LaTeX。
+   您必须选择 仅AI高精度识别，这样 AI 才能看到整张图片，从而理解其结构（表格、公式、段落）。
+- ![](https://r2.bennq.top/piclist/setting.webp)
+- **识别效果**
+- ![](https://r2.bennq.top/piclist/ocr1.webp)
+- ![](https://r2.bennq.top/piclist/ocr2.webp)
+
+
+
+
+
 
 ## 📊 对比识别效果
 
