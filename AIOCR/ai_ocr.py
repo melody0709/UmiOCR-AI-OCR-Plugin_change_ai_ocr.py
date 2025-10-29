@@ -1674,11 +1674,14 @@ class Api:
                 elif strategy == 'ai_high_precision_text_only':
                     local = getattr(self, 'local_config', {})
                     processed_base64 = self._preprocess_image(imageBase64)
-                    return self._run_ocr(processed_base64, {"output_format": "text_only", "language": local.get("language", "auto")})
+                    # *** 修改：确保调用 _run_ocr 时传递 output_format: text_only ***
+                    # (原代码) return self._run_ocr(processed_base64, {"output_format": "text_only", "language": local.get("language", "auto")})
+                    # (优化) self.local_config 已经包含了 output_format，直接传递
+                    return self._run_ocr(processed_base64, self.local_config)
                 # 兜底：未知或旧值（如 'ai_first'）均按含位置版处理
                 else:
                     return self._run_paddle_first_correction(imageBase64)
-            # 预处理图像
+            # 预处理图像 (兜底情况)
             processed_base64 = self._preprocess_image(imageBase64)
             # 执行OCR
             return self._run_ocr(processed_base64, self.local_config)
@@ -1791,11 +1794,27 @@ class Api:
         lang_instruction = lang_map.get(language, "自动检测语言")
         
         if output_format == "with_coordinates":
+            # 坐标模式（JSON）保持不变
             prompt = f"""识别图片文字并返回坐标，语言：{lang_instruction}
 输出JSON格式：{{"texts": [{{"text": "文字内容", "box": [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]}}]}}
 坐标为像素位置，左上角为原点。直接返回JSON，无其他内容。"""
         else:
-            prompt = f"""识别图片中的文字，语言：{lang_instruction}。保持原有格式，直接返回文字内容。"""
+            # ==========================================================
+            # =========== 这是唯一的修改点 (Markdown + LaTeX 提示词) ===========
+            # ==========================================================
+            prompt = f"""请将图片中的所有内容（文本、表格、公式）完整地识别出来，并以 Markdown 格式返回。
+
+请严格遵守以下规则：
+1.  **表格：** 如果图片中包含表格，请必须使用 Markdown 表格语法将其格式化。
+2.  **公式：** 如果图片中包含数学公式，请必须使用 LaTeX 格式将其包裹 (行内公式使用 $...$，块级公式使用 $$...$$)。
+3.  **结构：** 保持合理的段落、标题和列表结构。
+4.  **纯净：** 直接返回 Markdown 结果，不要包含任何解释性文字（如 "这是结果：" 或 "好的："），也不要使用 "```markdown" 代码块标记包裹整个结果。
+
+语言：{lang_instruction}。"""
+            # ==========================================================
+            # ======================= 修改结束 =========================
+            # ==========================================================
+        
         if language in ("auto", "zh"):
             prompt += "\n严格禁止对中文进行繁体/简体转换、全角/半角转换、字符归一化；混合繁简时保持混合状态。逐字抄写图像字符，不要重写。示例：不要把 '台灣里体干' 改为 '臺灣裏體幹'，也不要相反。"
         
@@ -2131,8 +2150,11 @@ class Api:
         if not content:
             return self._create_empty_result()
         
-        # 按行分割文本
-        lines = [line.strip() for line in content.split('\n') if line.strip()]
+        # ==================================================
+        # =========== 这是第二个修改点 (Markdown 解析) ===========
+        # ==================================================
+        # 不再按行分割，而是将整个 content 视为一个单独的列表项
+        lines = [content]
         
         if not lines:
             return self._create_empty_result()
@@ -2149,4 +2171,3 @@ class Api:
     def _create_error_result(self, error_msg):
         """创建错误结果"""
         return {"code": 102, "data": f"[Error] {error_msg}"}
-
